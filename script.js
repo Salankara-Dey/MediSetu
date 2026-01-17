@@ -2,7 +2,6 @@
  * DATA (FILE-BASED LOAD)
  ***********************/
 let medicines = [];
-let selectedMedicine = null;
 
 /***********************
  * LOAD DATA FROM JSON
@@ -13,7 +12,7 @@ async function loadMedicinesFromFile() {
     medicines = await response.json();
     refreshTable();
     updateAIAlert();
-    updateExpiryAlerts();
+    updateExpiryAlerts(); // initial expiry alert load
   } catch (error) {
     console.error("Failed to load medicines file:", error);
   }
@@ -30,31 +29,25 @@ function loadTable() {
 
     if (med.riskScore >= 8) row.classList.add("danger-row");
 
-    // Medicine name
     row.insertCell(0).innerText = med.name;
 
-    // Expiry with color
     const expiryLevel = getExpiryLevel(med.expiry);
-    row.insertCell(1).innerHTML =
-      `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
+    row.insertCell(1).innerHTML = `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
 
-    // Temp Status
     row.insertCell(2).innerHTML =
       med.tempStatus === "Unsafe"
         ? `<span class="pill critical">Critical</span>`
         : `<span class="pill safe">Safe</span>`;
 
-    // Risk Score
     med.riskScore = calculateRiskScore(med);
     row.insertCell(3).innerText = med.riskScore;
 
-    // Availability
     row.insertCell(4).innerHTML =
       med.status === "Available"
         ? `<span class="pill safe">Available</span>`
         : `<span class="pill critical">Reserved</span>`;
 
-    // ACTION BUTTON (Request / Reserved)
+    // Action button
     let actionCell = row.insertCell(5);
     let btn = document.createElement("button");
     if (med.status === "Available") {
@@ -101,9 +94,7 @@ function searchMedicines() {
   const rows = document.getElementById("medicineTable").rows;
 
   for (let i = 1; i < rows.length; i++) {
-    rows[i].style.display = rows[i].innerText.toLowerCase().includes(input)
-      ? ""
-      : "none";
+    rows[i].style.display = rows[i].innerText.toLowerCase().includes(input) ? "" : "none";
   }
 }
 
@@ -111,12 +102,11 @@ function searchMedicines() {
  * ANALYTICS
  ***********************/
 function updateStats() {
-  document.getElementById("stats").innerText =
-    medicines.filter(m => m.status !== "Available").length;
+  document.getElementById("stats").innerText = medicines.filter(m => m.status !== "Available").length;
 }
 
 /***********************
- * AI RISK SCORING
+ * AI MODEL: RISK SCORING
  ***********************/
 function calculateRiskScore(med) {
   let score = 0;
@@ -125,7 +115,6 @@ function calculateRiskScore(med) {
   else score += 1;
 
   if (med.tempStatus === "Unsafe") score += 4;
-
   if (isHighDemand(med.name)) score += 2;
 
   return Math.min(score, 10);
@@ -137,15 +126,12 @@ function isHighDemand(name) {
 }
 
 /***********************
- * AI RECOMMENDATION
+ * AI ALERT
  ***********************/
 function generateAIMessage(med) {
-  if (med.riskScore >= 8)
-    return "⚠ High risk of wastage. Immediate redistribution recommended.";
-  if (med.expiry <= 7)
-    return "⏳ Expiring soon. Suggest nearby redistribution.";
-  if (med.tempStatus === "Unsafe")
-    return "🌡 Temperature breach detected. Cold-chain attention required.";
+  if (med.riskScore >= 8) return "⚠ High risk of wastage. Immediate redistribution recommended.";
+  if (med.expiry <= 7) return "⏳ Expiring soon. Suggest nearby redistribution.";
+  if (med.tempStatus === "Unsafe") return "🌡 Temperature breach detected. Cold-chain attention required.";
   return "✅ Stock is safe.";
 }
 
@@ -153,10 +139,8 @@ function updateAIAlert() {
   const critical = medicines.find(m => m.riskScore >= 8);
   if (!critical) return;
 
-  document.querySelector(".alert strong").innerText =
-    "AI Alert: High Wastage Risk";
-  document.querySelector(".alert p").innerText =
-    generateAIMessage(critical);
+  document.querySelector(".alert strong").innerText = "AI Alert: High Wastage Risk";
+  document.querySelector(".alert p").innerText = generateAIMessage(critical);
 }
 
 /***********************
@@ -224,34 +208,7 @@ document.addEventListener("click", e => {
 });
 
 /***********************
- * MODAL FOR REQUEST
- ***********************/
-function openModal(med) {
-  selectedMedicine = med;
-  const modal = document.getElementById("modal");
-  modal.style.display = "flex";
-
-  document.getElementById("modalMedicineName").innerText = med.name;
-  document.getElementById("modalExpiry").innerText = med.expiry;
-  document.getElementById("modalRiskScore").innerText = med.riskScore;
-  document.getElementById("modalRiskLabel").innerText =
-    med.riskScore >= 8 ? "Critical" : "Warning";
-}
-
-function closeModal() {
-  const modal = document.getElementById("modal");
-  modal.style.display = "none";
-}
-
-function confirmRequest() {
-  if (!selectedMedicine) return;
-  selectedMedicine.status = "Reserved";
-  closeModal();
-  refreshTable();
-}
-
-/***********************
- * EXPIRY COLORS
+ * EXPIRY PILL COLORS
  ***********************/
 function getExpiryLevel(days) {
   if (days <= 7) return "critical";
@@ -259,23 +216,6 @@ function getExpiryLevel(days) {
   if (days <= 60) return "notice";
   return "safe";
 }
-
-/***********************
- * BLYNK REAL-TIME TEMP (OPTIONAL)
- ***********************/
-const BLYNK_TOKEN = "O_99-ewWBAop_gdx5ADa4PekLYtCYnHq";
-const TEMP_PIN = "V0";
-
-function fetchTemperatureFromBlynk() {
-  fetch(`https://blynk.cloud/external/api/get?token=${BLYNK_TOKEN}&pin=${TEMP_PIN}`)
-    .then(res => res.text())
-    .then(temp => {
-      document.getElementById("liveTemp").innerText = `${temp} °C`;
-      document.getElementById("tempStatus").innerText =
-        temp < 2 || temp > 8 ? "❌ Risk" : "✅ Safe";
-    });
-}
-setInterval(fetchTemperatureFromBlynk, 5000);
 
 /***********************
  * INITIAL LOAD
