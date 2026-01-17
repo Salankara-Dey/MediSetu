@@ -298,6 +298,8 @@ localStorage.setItem("selectedMedicine", medicine);
 
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
+  document.getElementById("dashboardUI").style.display = "block";
+
   // 🔹 FORCE RELOAD DATA AFTER LOGIN (DO NOT REMOVE)
 loadMedicinesFromFile();
 }
@@ -390,6 +392,8 @@ if (!role || cameFromStore !== "store") return;
   if (loginScreen && dashboard) {
     loginScreen.style.display = "none";
     dashboard.style.display = "block";
+    document.getElementById("dashboardUI").style.display = "block";
+
   }
 
   // Reload data so filters / views apply
@@ -402,6 +406,7 @@ if (!role || cameFromStore !== "store") return;
  * INITIAL LOAD
  ***********************/
 autoShowDashboardIfLoggedIn();
+
 
 
 
