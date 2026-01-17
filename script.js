@@ -28,6 +28,11 @@ function loadTable() {
         : `<span class="pill safe">Safe</span>`;
     med.riskScore = calculateRiskScore(med);
 row.insertCell(3).innerText = med.riskScore;
+    const aiCell = row.insertCell(6);
+aiCell.innerText = aiMessage;
+aiCell.style.fontSize = "0.75rem";
+aiCell.style.color = "#5C6B73";
+
     row.insertCell(4).innerHTML =
       med.status === "Available"
         ? `<span class="pill safe">Available</span>`
@@ -124,12 +129,25 @@ function generateAIMessage(med) {
 
   return "✅ Stock is safe. No immediate action required.";
 }
+function updateAIAlert() {
+  const criticalMeds = medicines.filter(m => m.riskScore >= 8);
+
+  if (criticalMeds.length > 0) {
+    document.querySelector(".alert strong").innerText =
+      "AI Alert: High Wastage Risk Detected";
+
+    document.querySelector(".alert p").innerText =
+      generateAIMessage(criticalMeds[0]);
+  }
+}
 
 
 /***********************
  * INIT
  ***********************/
 loadTable();
+updateAIAlert();
+
 
 
 
