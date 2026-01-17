@@ -1,9 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Medi Setu – Admin Control Panel</title>
+
+<style>
+:root {
+  --bg: #E0FBFC;
+  --card: #C2DFE3;
+  --border: #9DB4C0;
+  --muted: #5C6B73;
+  --dark: #253237;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: var(--muted);
+}
+
+/* KPI */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  background: var(--card);
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.kpi h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.kpi p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+h3 {
+  margin-top: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  font-size: 14px;
+}
+
+th {
+  background: var(--border);
+}
+
+tr:nth-child(even) {
+  background: rgba(255,255,255,0.45);
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.safe { background: #d4edda; color: #155724; }
+.warning { background: #fff3cd; color: #856404; }
+.critical { background: #f8d7da; color: #721c24; }
+
+button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  background: var(--dark);
+  color: white;
+}
+
+button.secondary {
+  background: var(--muted);
+}
+
+footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 13px;
+  color: var(--muted);
+}
+</style>
 </head>
 
 <body>
@@ -11,42 +136,72 @@
 <div class="dashboard">
 
   <div class="header">
-    <h1>🛠 Admin Dashboard</h1>
-    <p class="subtitle">System Management & Oversight</p>
+    <h1>🛠 Medi Setu – Admin Control Panel</h1>
+    <p class="subtitle">AI-Assisted Oversight of Medicine Availability & Risk</p>
   </div>
 
-  <!-- REGISTER ORGANIZATION -->
+  <!-- KPI -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <h2 id="criticalCount">0</h2>
+      <p>Critical Medicines</p>
+    </div>
+    <div class="kpi">
+      <h2 id="warningCount">0</h2>
+      <p>Near-Expiry Medicines</p>
+    </div>
+    <div class="kpi">
+      <h2 id="verifiedStores">0</h2>
+      <p>Verified Stores</p>
+    </div>
+  </div>
+
+  <!-- INVENTORY -->
   <div class="card">
-    <h3>Register Pharmacy / Hospital</h3>
-
-    <input type="text" id="orgName" placeholder="Organization Name">
-    <br><br>
-
-    <input type="text" id="orgLocation" placeholder="Location">
-    <br><br>
-
-    <select id="orgType">
-      <option>Pharmacy</option>
-      <option>Hospital</option>
-    </select>
-    <br><br>
-
-    <button onclick="registerOrg()">Register</button>
+    <h3>📦 Inventory Risk Monitoring</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Store</th>
+          <th>Qty</th>
+          <th>Expiry</th>
+          <th>Risk</th>
+          <th>Status</th>
+          <th>ML Reason</th>
+          <th>User Visibility</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryTable"></tbody>
+    </table>
   </div>
 
-  <br>
-
-  <!-- REGISTERED LIST -->
+  <!-- STORE VERIFICATION -->
   <div class="card">
-    <h3>Registered Organizations</h3>
-    <ul id="orgList"></ul>
+    <h3>🏥 Store Verification</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Store</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="storeTable"></tbody>
+    </table>
   </div>
 
-  <br>
-  <a href="index.html">← Back to Main Dashboard</a>
+  <footer>
+    Decisions are AI-assisted. Final approval remains with Admin.
+  </footer>
 
 </div>
 
 <script src="admin.js"></script>
 </body>
 </html>
+<button onclick="showLocationMatches()">
+  Generate Location-Safe Matches
+</button>
