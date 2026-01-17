@@ -24,6 +24,7 @@ async function loadMedicinesFromFile() {
     console.error("Failed to load medicines file:", error);
   }
 }
+applyMedicineFilter();
 
 /***********************
  * TABLE LOAD
@@ -253,6 +254,8 @@ function login() {
   localStorage.setItem("role", role);
   localStorage.setItem("name", name);
   localStorage.setItem("location", location);
+  const medicine = document.getElementById("medicine")?.value || "";
+localStorage.setItem("selectedMedicine", medicine);
 
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
@@ -325,11 +328,29 @@ function sendTestEmail() {
     console.error("Test email error:", err);
   });
 }
+/************************************
+ * APPLY MEDICINE FILTER (USER LOGIN)
+ ************************************/
+function applyMedicineFilter() {
+  const selectedMedicine = localStorage.getItem("selectedMedicine");
+  const role = localStorage.getItem("role");
+
+  // Only filter for normal users
+  if (role !== "user" || !selectedMedicine) return;
+
+  medicines = medicines.filter(m =>
+    m.name.toLowerCase().includes(selectedMedicine.toLowerCase())
+  );
+
+  refreshTable();
+}
+
 
 /***********************
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
 
 
