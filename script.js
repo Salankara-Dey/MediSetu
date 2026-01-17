@@ -3,7 +3,7 @@
  ***********************/
 let medicines = [];
 
- ************************************/
+ 
 function getTodayDate() {
   return new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -432,6 +432,7 @@ if (!role || cameFromStore !== "store") return;
  * INITIAL LOAD
  ***********************/
 autoShowDashboardIfLoggedIn();
+
 
 
 
