@@ -1,0 +1,47 @@
+[
+  { "name": "Insulin (Human) Batch-1", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Pharmacy A", "status": "Available" },
+  { "name": "Insulin Glargine Batch-2", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy B", "status": "Available" },
+  { "name": "COVID-19 Vaccine Batch-3", "expiry": 2, "tempStatus": "Unsafe", "riskScore": 10, "pharmacy": "Hospital Cold Storage", "status": "Available" },
+  { "name": "Hepatitis B Vaccine Batch-4", "expiry": 5, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy C", "status": "Available" },
+  { "name": "MMR Vaccine Batch-5", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "City Hospital", "status": "Available" },
+  { "name": "Oxytocin Injection Batch-6", "expiry": 7, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Maternity Center", "status": "Available" },
+  { "name": "Erythropoietin Injection Batch-7", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 8, "pharmacy": "Dialysis Clinic", "status": "Available" },
+  { "name": "Interferon Alpha Batch-8", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Specialty Pharmacy", "status": "Available" },
+  { "name": "Trastuzumab Batch-9", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Oncology Center", "status": "Available" },
+  { "name": "Growth Hormone Injection Batch-10", "expiry": 8, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Pharmacy D", "status": "Available" },
+
+  { "name": "Insulin (Human) Batch-11", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy A", "status": "Available" },
+  { "name": "COVID-19 Vaccine Batch-12", "expiry": 1, "tempStatus": "Unsafe", "riskScore": 10, "pharmacy": "Government Cold Storage", "status": "Available" },
+  { "name": "MMR Vaccine Batch-13", "expiry": 5, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Medical College Hospital", "status": "Available" },
+  { "name": "Oxytocin Injection Batch-14", "expiry": 9, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Maternity Center", "status": "Available" },
+  { "name": "Erythropoietin Injection Batch-15", "expiry": 2, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Dialysis Clinic", "status": "Available" },
+  { "name": "Interferon Alpha Batch-16", "expiry": 7, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Specialty Pharmacy", "status": "Available" },
+  { "name": "Trastuzumab Batch-17", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Oncology Center", "status": "Available" },
+  { "name": "Growth Hormone Injection Batch-18", "expiry": 10, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Pharmacy D", "status": "Available" },
+  { "name": "Insulin Glargine Batch-19", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy B", "status": "Available" },
+  { "name": "COVID-19 Vaccine Batch-20", "expiry": 2, "tempStatus": "Unsafe", "riskScore": 10, "pharmacy": "Hospital Cold Storage", "status": "Available" },
+
+  { "name": "Hepatitis B Vaccine Batch-21", "expiry": 4, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy C", "status": "Available" },
+  { "name": "MMR Vaccine Batch-22", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "City Hospital", "status": "Available" },
+  { "name": "Oxytocin Injection Batch-23", "expiry": 8, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Maternity Center", "status": "Available" },
+  { "name": "Erythropoietin Injection Batch-24", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 8, "pharmacy": "Dialysis Clinic", "status": "Available" },
+  { "name": "Interferon Alpha Batch-25", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Specialty Pharmacy", "status": "Available" },
+
+  { "name": "Insulin (Human) Batch-26", "expiry": 5, "tempStatus": "Unsafe", "riskScore": 8, "pharmacy": "Pharmacy A", "status": "Available" },
+  { "name": "Insulin Glargine Batch-27", "expiry": 7, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy B", "status": "Available" },
+  { "name": "COVID-19 Vaccine Batch-28", "expiry": 2, "tempStatus": "Unsafe", "riskScore": 10, "pharmacy": "Hospital Cold Storage", "status": "Available" },
+  { "name": "Hepatitis B Vaccine Batch-29", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy C", "status": "Available" },
+  { "name": "MMR Vaccine Batch-30", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "City Hospital", "status": "Available" },
+
+  { "name": "Oxytocin Injection Batch-31", "expiry": 8, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Maternity Center", "status": "Available" },
+  { "name": "Erythropoietin Injection Batch-32", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 8, "pharmacy": "Dialysis Clinic", "status": "Available" },
+  { "name": "Interferon Alpha Batch-33", "expiry": 7, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Specialty Pharmacy", "status": "Available" },
+  { "name": "Trastuzumab Batch-34", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Oncology Center", "status": "Available" },
+  { "name": "Growth Hormone Injection Batch-35", "expiry": 9, "tempStatus": "Safe", "riskScore": 5, "pharmacy": "Pharmacy D", "status": "Available" },
+
+  { "name": "Insulin (Human) Batch-36", "expiry": 4, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "Pharmacy A", "status": "Available" },
+  { "name": "Insulin Glargine Batch-37", "expiry": 6, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy B", "status": "Available" },
+  { "name": "COVID-19 Vaccine Batch-38", "expiry": 2, "tempStatus": "Unsafe", "riskScore": 10, "pharmacy": "Hospital Cold Storage", "status": "Available" },
+  { "name": "Hepatitis B Vaccine Batch-39", "expiry": 5, "tempStatus": "Safe", "riskScore": 6, "pharmacy": "Pharmacy C", "status": "Available" },
+  { "name": "MMR Vaccine Batch-40", "expiry": 3, "tempStatus": "Unsafe", "riskScore": 9, "pharmacy": "City Hospital", "status": "Available" }
+]
