@@ -27,7 +27,7 @@
     <img src="logo.jpeg" class="logo-img" />
     <div>
       <h1>MediSetu</h1>
-      <span>Cold‑Chain Medicine Redistribution Portal</span>
+      <span>Cold-Chain Medicine Redistribution Portal</span>
     </div>
   </div>
 
@@ -38,11 +38,29 @@
   </div>
 </nav>
 
+<!-- 🔔 NOTIFICATION DROPDOWN -->
+<div id="notificationBox" class="dropdown-box" style="display:none;"></div>
+
+<!-- ⚙️ SETTINGS DROPDOWN -->
+<div id="settingsBox" class="dropdown-box" style="display:none;">
+  <strong>Settings</strong>
+  <p>Theme</p>
+  <p>Notifications</p>
+  <p>Logout</p>
+</div>
+
+<!-- 👤 PROFILE DROPDOWN -->
+<div id="profileBox" class="dropdown-box" style="display:none;">
+  <strong>User Profile</strong>
+  <p>Admin</p>
+  <p>Distributor</p>
+</div>
+
 <!-- ALERT -->
 <div class="alert">
   <i class="fa-solid fa-triangle-exclamation"></i>
   <div>
-    <strong>Cold‑Chain Breach Detected</strong>
+    <strong>Cold-Chain Breach Detected</strong>
     <p>Storage Unit #3 exceeded safe temperature range.</p>
   </div>
 </div>
@@ -52,7 +70,7 @@
 
   <div class="header">
     <h1>🏥 Medicine Redistribution Portal</h1>
-    <p class="subtitle">Real‑time Cold‑Chain Monitoring & Smart Redistribution</p>
+    <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
   </div>
 
   <!-- METRICS -->
@@ -91,7 +109,6 @@
       <th>Status</th>
       <th>Action</th>
       <th>AI Recommendation</th>
-
     </tr>
   </table>
 
@@ -100,13 +117,13 @@
 </div>
 
 <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   (function(){
     emailjs.init("m9_yAWBSXiFYtHggT");
   })();
 </script>
+
 </body>
-</html><div class=""></div>
-
-
+</html>
