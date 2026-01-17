@@ -53,10 +53,28 @@
 </div>
 
 <!-- 👤 PROFILE -->
+<div id="profileBox" class="dropdown-box" style="display:none;">
+  <strong>User Profile</strong>
+  <p>Admin</p>
+  <p>Distributor</p>
+</div>
+
+<!-- ALERT -->
+<div class="alert">
+  <i class="fa-solid fa-triangle-exclamation"></i>
+  <div>
+    <strong>Cold-Chain Breach Detected</strong>
+    <p>Storage Unit #3 exceeded safe temperature range.</p>
+  </div>
+</div>
+
 <!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-body">
   <div class="login-card">
-   
+    <div class="login-header">
+      <h2>Welcome to MediSetu</h2>
+      <p class="subtitle">Enter your details to continue</p>
+    </div>
 
     <div class="login-form">
       <input type="text" id="name" placeholder="Your Name" />
@@ -79,96 +97,58 @@
   </div>
 </div>
 
-<!-- ALERT -->
-<div class="alert">
-  <i class="fa-solid fa-triangle-exclamation"></i>
-  <div>
-    <strong>Cold-Chain Breach Detected</strong>
-    <p>Storage Unit #3 exceeded safe temperature range.</p>
-  </div>
-</div>
-<!-- LOGIN SCREEN -->
-<div id="loginScreen" class="login-body">
-  <div class="login-card">
-    <h2>Welcome</h2>
-    <p class="muted">Select your role to continue</p>
-
-    <input type="text" id="name" placeholder="Your Name" />
-    <input type="text" id="location" placeholder="Location" />
-
-    <select id="role" onchange="handleRoleChange()">
-      <option value="">Select Role</option>
-      <option value="admin">Admin</option>
-      <option value="user">User / Buyer</option>
-      <option value="store">Medical Store</option>
-    </select>
-
-    <!-- User-only field -->
-    <div id="medicineField" style="display:none;">
-      <input type="text" id="medicine" placeholder="Required Medicine" />
-    </div>
-
-    <button onclick="login()">Login</button>
-  </div>
-</div>
-
 <!-- DASHBOARD -->
-  <div id="dashboard" style="display:none;">
-<div class="dashboard">
+<div id="dashboard" style="display:none;">
+  <div class="dashboard">
+    <div class="header">
+      <h1>🏥 Medicine Redistribution Portal</h1>
+      <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
+    </div>
 
-  <div class="header">
-    <h1>🏥 Medicine Redistribution Portal</h1>
-    <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
+    <!-- METRICS -->
+    <div class="analytics">
+      <div class="card">
+        <span class="label">Live Temperature</span>
+        <h2 id="liveTemp">-- °C</h2>
+      </div>
+
+      <div class="card">
+        <span class="label">Cold Chain Status</span>
+        <h2 id="tempStatus">--</h2>
+      </div>
+
+      <div class="card">
+        <span class="label">Medicines Reserved Today</span>
+        <h2 id="stats">0</h2>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="🔍 Search medicine or pharmacy..."
+      onkeyup="searchMedicines()"
+    />
+
+    <!-- TABLE -->
+    <table id="medicineTable">
+      <tr>
+        <th>Medicine</th>
+        <th>Expiry</th>
+        <th>Temp Status</th>
+        <th>Risk Score</th>
+        <th>Status</th>
+        <th>Action</th>
+        <th>AI Recommendation</th>
+      </tr>
+    </table>
+
+    <br />
+    <a href="admin-login.html">Admin Portal</a>
   </div>
-</div>
-  <!-- METRICS -->
-  <div class="analytics">
-    <div class="card">
-      <span class="label">Live Temperature</span>
-      <h2 id="liveTemp">-- °C</h2>
-    </div>
-
-    <div class="card">
-      <span class="label">Cold Chain Status</span>
-      <h2 id="tempStatus">--</h2>
-    </div>
-
-    <div class="card">
-      <span class="label">Medicines Reserved Today</span>
-      <h2 id="stats">0</h2>
-    </div>
-  </div>
-
-  <!-- SEARCH -->
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="🔍 Search medicine or pharmacy..."
-    onkeyup="searchMedicines()"
-  />
-
-  <!-- TABLE -->
-  <table id="medicineTable">
-    <tr>
-      <th>Medicine</th>
-      <th>Expiry</th>
-      <th>Temp Status</th>
-      <th>Risk Score</th>
-      <th>Status</th>
-      <th>Action</th>
-      <th>AI Recommendation</th>
-    </tr>
-  </table>
-
-  <br />
-  <a href="admin-login.html">Admin Portal</a>
 </div>
 
 <script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
 </body>
 </html>
-
-
-
