@@ -75,3 +75,11 @@ function renderPreview(data) {
 function exitToHome() {
   window.location.href = "index.html";
 }
+/************************************
+ * GO TO MAIN DASHBOARD
+ ************************************/
+function goToDashboard() {
+  // Keep role and login info intact
+  window.location.href = "index.html?from=store";
+}
+
