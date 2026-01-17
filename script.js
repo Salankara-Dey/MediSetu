@@ -257,6 +257,28 @@ function login() {
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
 }
+/************************************************
+ * 🔹 ADDED: ROLE-BASED REDIRECTION (DO NOT EDIT)
+ ************************************************/
+(function enableRoleRedirect() {
+  const originalLogin = login;
+
+  login = function () {
+    originalLogin(); // keep existing behavior intact
+
+    const role = localStorage.getItem("role");
+
+    if (role === "admin") {
+      window.location.href = "admin-login.html";
+    }
+
+    if (role === "store") {
+      window.location.href = "inventory.html";
+    }
+
+    // role === "user" → stays on same dashboard (default)
+  };
+})();
 
 /***********************
  * EMAIL ALERT FOR CRITICAL EXPIRY
@@ -308,5 +330,6 @@ function sendTestEmail() {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
 
