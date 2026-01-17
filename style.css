@@ -485,6 +485,45 @@ button:disabled {
   opacity: 0.9;
 }
 
+/* =========================
+   FOOTER STYLES
+========================= */
+.footer {
+  margin-top: 40px;
+  padding: 20px 30px;
+  background: #d7eef2;
+  border-top: 1px solid #b5d6dc;
+  font-size: 13px;
+  color: #3a4a50;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer-left strong {
+  font-size: 15px;
+}
+
+.footer-left p,
+.footer-center p,
+.footer-right p {
+  margin: 2px 0;
+}
+
+.footer-center {
+  text-align: center;
+  flex: 1;
+}
+
+.footer-right {
+  text-align: right;
+}
+
 
 
 
