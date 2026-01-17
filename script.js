@@ -191,6 +191,8 @@ function updateExpiryAlerts() {
 function openNotifications() {
   hideAllDropdowns();
   updateExpiryAlerts();
+  sendExpiryEmailAlert(); // EMAILJS ADDED
+
   document.getElementById("notificationBox").style.display = "block";
 }
 
@@ -284,7 +286,40 @@ function login() {
   document.getElementById("dashboard").style.display = "block";
 }
 /***********************
+ * EMAILJS INITIALIZATION (ADDED)
+ ***********************/
+(function () {
+  emailjs.init("YOUR_PUBLIC_KEY"); // replace from EmailJS dashboard
+})();
+/***********************
+ * EMAIL ALERT FOR CRITICAL EXPIRY (ADDED)
+ ***********************/
+function sendExpiryEmailAlert() {
+  const criticalMeds = medicines.filter(m => m.expiry <= 7);
+
+  if (criticalMeds.length === 0) return;
+
+  const medicineList = criticalMeds
+    .map(m => `${m.name} (expires in ${m.expiry} days)`)
+    .join(", ");
+
+  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    to_name: localStorage.getItem("name") || "Admin",
+    location: localStorage.getItem("location") || "Unknown",
+    medicines: medicineList,
+    message: "Critical medicines nearing expiry detected"
+  })
+  .then(() => {
+    console.log("✅ Expiry alert email sent");
+  })
+  .catch(err => {
+    console.error("❌ Email failed:", err);
+  });
+}
+
+/***********************
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
