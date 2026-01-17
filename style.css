@@ -66,6 +66,94 @@ table td, table th {
   margin: 8px 0;
   cursor: pointer;
 }
+/* ===== LOGIN SCREEN STYLING ===== */
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #e0fbfc, #9db4c0);
+  font-family: 'Inter', sans-serif;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  padding: 40px;
+  width: 360px;
+  max-width: 90%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.login-header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #253237;
+  text-align: center;
+}
+
+.login-header .subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #5c6b73;
+  text-align: center;
+}
+
+.login-form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form input,
+.login-form select {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #c2dfe3;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.login-form input:focus,
+.login-form select:focus {
+  border-color: #5c6b73;
+  box-shadow: 0 0 0 3px rgba(92, 107, 115, 0.2);
+}
+
+.login-form button {
+  padding: 12px 16px;
+  background: #253237;
+  color: #e0fbfc;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-form button:hover {
+  background: #5c6b73;
+}
+
+/* Medicine input (user-only) */
+#medicineField input {
+  background: #f6f8f9;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 400px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+}
 
 /* ===============================
    BASE
@@ -382,6 +470,7 @@ button:disabled {
     align-items: flex-start;
   }
 }
+
 
 
 
