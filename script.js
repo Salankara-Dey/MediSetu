@@ -4,6 +4,13 @@
 let medicines = [];
 
 /***********************
+ * EMAILJS INITIALIZATION
+ ***********************/
+(function () {
+  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+})();
+
+/***********************
  * LOAD DATA FROM JSON
  ***********************/
 async function loadMedicinesFromFile() {
@@ -184,46 +191,15 @@ function updateExpiryAlerts() {
 }
 
 /***********************
- * EMAILJS INITIALIZATION
- ***********************/
-(function () {
-  emailjs.init("m9_yAWBSXiFYtHggT"); // replace with your EmailJS public key
-})();
-
-/***********************
- * SEND EMAIL ALERT
- ***********************/
-function sendExpiryEmailAlert() {
-  const criticalMeds = medicines.filter(m => m.expiry <= 7);
-  if (criticalMeds.length === 0) return;
-
-  const medicineList = criticalMeds
-    .map(m => `${m.name} (expires in ${m.expiry} days)`)
-    .join(", ");
-
-  emailjs.send("service_66ksufr", "template_wafbbgi", {
-    to_name: localStorage.getItem("name") || "Admin",
-    location: localStorage.getItem("location") || "Unknown",
-    medicines: medicineList,
-    message: "Critical medicines nearing expiry detected"
-  })
-  .then(() => console.log("✅ Expiry alert email sent"))
-  .catch(err => console.error("❌ Email failed:", err));
-}
-
-/***********************
- * ALERT BUTTON
+ * ALERT / DROPDOWN BUTTONS
  ***********************/
 function openNotifications() {
   hideAllDropdowns();
   updateExpiryAlerts();
-  sendExpiryEmailAlert(); // send email when alert opened
+  sendExpiryEmailAlert(); // trigger email alert if critical
   document.getElementById("notificationBox").style.display = "block";
 }
 
-/***********************
- * SETTINGS & PROFILE BUTTONS
- ***********************/
 function openSettings() {
   hideAllDropdowns();
   document.getElementById("settingsBox").style.display = "block";
@@ -234,9 +210,6 @@ function openProfile() {
   document.getElementById("profileBox").style.display = "block";
 }
 
-/***********************
- * HIDE ALL DROPDOWNS
- ***********************/
 function hideAllDropdowns() {
   ["notificationBox", "settingsBox", "profileBox"].forEach(id => {
     const el = document.getElementById(id);
@@ -259,7 +232,7 @@ function getExpiryLevel(days) {
 }
 
 /***********************
- * LOGIN & ROLE HANDLING
+ * LOGIN HANDLING
  ***********************/
 function handleRoleChange() {
   const role = document.getElementById("role").value;
@@ -283,6 +256,52 @@ function login() {
 
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
+}
+
+/***********************
+ * EMAIL ALERT FOR CRITICAL EXPIRY
+ ***********************/
+function sendExpiryEmailAlert() {
+  const criticalMeds = medicines.filter(m => m.expiry <= 7);
+
+  if (criticalMeds.length === 0) return;
+
+  const medicineList = criticalMeds
+    .map(m => `${m.name} (expires in ${m.expiry} days)`)
+    .join(", ");
+
+  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    to_name: localStorage.getItem("name") || "Admin",
+    location: localStorage.getItem("location") || "Unknown",
+    medicines: medicineList,
+    message: "Critical medicines nearing expiry detected"
+  })
+  .then(() => {
+    console.log("✅ Expiry alert email sent");
+  })
+  .catch(err => {
+    console.error("❌ Email failed:", err);
+  });
+}
+
+/***********************
+ * TEST EMAIL FUNCTION
+ ***********************/
+function sendTestEmail() {
+  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    to_name: "Test User",
+    location: "Test Location",
+    medicines: "Test Medicine 1, Test Medicine 2",
+    message: "This is a test alert from MediSetu."
+  })
+  .then(() => {
+    alert("✅ Test email sent successfully!");
+    console.log("Test email sent");
+  })
+  .catch(err => {
+    alert("❌ Test email failed. Check console.");
+    console.error("Test email error:", err);
+  });
 }
 
 /***********************
