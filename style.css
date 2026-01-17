@@ -15,6 +15,31 @@
   --border: #9DB4C0;
   --text-muted: #6b7280;
 }
+.dropdown-box {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px;
+  width: 260px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  z-index: 999;
+  font-size: 0.9rem;
+}
+
+#settingsBox {
+  right: 80px;
+}
+
+#profileBox {
+  right: 140px;
+}
+
+.dropdown-box p {
+  margin: 8px 0;
+  cursor: pointer;
+}
 
 /* ===============================
    BASE
@@ -304,3 +329,4 @@ button:disabled {
     align-items: flex-start;
   }
 }
+
