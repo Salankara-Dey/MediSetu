@@ -20,45 +20,47 @@
 </head>
 
 <body>
+
 <div id="dashboardUI" style="display:none;">
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="brand">
-    <img src="logo.jpeg" class="logo-img" />
-    <div>
-      <h1>MediSetu</h1>
-      <span>Cold-Chain Medicine Redistribution Portal</span>
-    </div>
-  </div>
 
-  <div class="nav-right">
-    <div class="icon-wrapper">
-      <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
-      <span id="alertCount" class="badge">0</span>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="brand">
+      <img src="logo.jpeg" class="logo-img" />
+      <div>
+        <h1>MediSetu</h1>
+        <span>Cold-Chain Medicine Redistribution Portal</span>
+      </div>
     </div>
-    <i class="fa-solid fa-gear" onclick="openSettings()"></i>
-    <button
-  onclick="sendTestEmail()"
-  class="nav-btn"
-  title="Send Test Email"
->
-  📧 Test Email
-</button>
 
-    <div class="avatar" onclick="openProfile()">A</div>
-  </div>
-</nav>
+    <div class="nav-right">
+      <div class="icon-wrapper">
+        <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
+        <span id="alertCount" class="badge">0</span>
+      </div>
+      <i class="fa-solid fa-gear" onclick="openSettings()"></i>
+      <button
+        onclick="sendTestEmail()"
+        class="nav-btn"
+        title="Send Test Email"
+      >
+        📧 Test Email
+      </button>
+
+      <div class="avatar" onclick="openProfile()">A</div>
+    </div>
+  </nav>
+
   <!-- ALERT -->
-<div class="alert">
-  <i class="fa-solid fa-triangle-exclamation"></i>
-  <div>
-    <strong>Cold-Chain Breach Detected</strong>
-    <p>Storage Unit #3 exceeded safe temperature range.</p>
+  <div class="alert">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <div>
+      <strong>Cold-Chain Breach Detected</strong>
+      <p>Storage Unit #3 exceeded safe temperature range.</p>
+    </div>
   </div>
+
 </div>
-
-
-  </div>
 
 <!-- 🔔 NOTIFICATION DROPDOWN -->
 <div id="notificationBox" class="dropdown-box" style="display:none;"></div>
@@ -77,7 +79,6 @@
   <p>Admin</p>
   <p>Distributor</p>
 </div>
-
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-body">
@@ -138,35 +139,35 @@
     <input
       type="text"
       id="searchInput"
-      placeholder="🔍 Search medicine or pharmacy..."
+      placeholder="Search medicine or pharmacy..."
       onkeyup="searchMedicines()"
     />
 
     <!-- TABLE -->
-    <table id="medicineTable">
-      <tr>
-        <th>Medicine</th>
-        <th>Expiry</th>
-        <th>Temp Status</th>
-        <th>Risk Score</th>
-        <th>Status</th>
-        <th>Action</th>
-        <th>AI Recommendation</th>
-      </tr>
-    </table>
-
-    <br />
+    <div class="table-container">
+      <table id="medicineTable">
+        <tr>
+          <th>Medicine</th>
+          <th>Expiry</th>
+          <th>Temp Status</th>
+          <th>Risk Score</th>
+          <th>Status</th>
+          <th>Action</th>
+          <th>AI Recommendation</th>
+        </tr>
+      </table>
+    </div>
 
     <!-- TEST EMAIL BUTTON -->
-    
-    <br /><br />
-    
+    <!-- (you had many <br> here – kept minimal spacing) -->
+
   </div>
 </div>
 
 <!-- SCRIPT FILES -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script src="script.js"></script>
+
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-content">
@@ -185,12 +186,6 @@
     </div>
   </div>
 </footer>
+
 </body>
 </html>
-
-
-
-
-
-
-
