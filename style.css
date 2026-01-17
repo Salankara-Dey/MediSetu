@@ -35,6 +35,21 @@
 #profileBox {
   right: 140px;
 }
+/* ✅ Ensure table text is always visible */
+table {
+  color: #253237; /* dark readable text */
+}
+
+table td, table th {
+  color: #253237;
+}
+
+/* ✅ Fix for danger / flashing rows */
+.danger-row td,
+.flash-row td {
+  color: #253237 !important;
+}
+
 
 .dropdown-box p {
   margin: 8px 0;
@@ -356,5 +371,6 @@ button:disabled {
     align-items: flex-start;
   }
 }
+
 
 
