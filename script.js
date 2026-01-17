@@ -3,6 +3,15 @@
  ***********************/
 let medicines = [];
 
+ ************************************/
+function getTodayDate() {
+  return new Date().toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+
 /***********************
  * EMAILJS INITIALIZATION
  ***********************/
@@ -337,12 +346,29 @@ function sendExpiryEmailAlert() {
   const medicineList = criticalMeds
     .map(m => `${m.name} (expires in ${m.expiry} days)`)
     .join(", ");
+const urgency =
+  criticalMeds.length >= 3 ? "HIGH" : "MODERATE";
 
   emailjs.send("service_66ksufr", "template_wafbbgi", {
     to_name: localStorage.getItem("name") || "Admin",
     location: localStorage.getItem("location") || "Unknown",
     medicines: medicineList,
-    message: "Critical medicines nearing expiry detected"
+    message: `
+🚨 CRITICAL EXPIRY ALERT
+
+Date: ${getTodayDate()}
+Location: ${localStorage.getItem("location") || "Unknown"}
+Urgency Level: ${urgency}
+
+Medicines nearing expiry:
+${medicineList}
+
+Recommended Action:
+Immediate redistribution or reordering is advised.
+
+— MediSetu AI Monitoring System
+`
+
   })
   .then(() => {
     console.log("✅ Expiry alert email sent");
@@ -406,6 +432,7 @@ if (!role || cameFromStore !== "store") return;
  * INITIAL LOAD
  ***********************/
 autoShowDashboardIfLoggedIn();
+
 
 
 
