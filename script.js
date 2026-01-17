@@ -36,6 +36,24 @@ const allMedicines = await response.json();
 
 // 🔹 APPLY FILTER BEFORE RENDERING (DO NOT REMOVE)
 medicines = getFilteredMedicines(allMedicines);
+    /************************************
+ * 🔹 ADD: MERGE APPROVED STORE INVENTORY
+ ************************************/
+const storeData =
+  JSON.parse(localStorage.getItem("storeInventories")) || [];
+
+const approvedStoreData = storeData
+  .filter(i => i.approved)
+  .map(i => ({
+    name: i.medicine,
+    expiry: i.expiryDays,
+    tempStatus: i.temperatureRisk === "Critical" ? "Unsafe" : "Safe",
+    riskScore: 5,
+    status: "Available"
+  }));
+
+medicines = medicines.concat(approvedStoreData);
+
 
 refreshTable();
 updateAIAlert();
@@ -381,6 +399,7 @@ function autoShowDashboardIfLoggedIn() {
  * INITIAL LOAD
  ***********************/
 autoShowDashboardIfLoggedIn();
+
 
 
 
