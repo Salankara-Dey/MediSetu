@@ -30,7 +30,6 @@ function loadTable() {
     // Blink if high risk
     if (med.riskScore >= 8) row.classList.add("danger-row", "blinking-row");
 
-
     row.insertCell(0).innerText = med.name;
 
     const expiryLevel = getExpiryLevel(med.expiry);
@@ -49,7 +48,6 @@ function loadTable() {
         ? `<span class="pill safe">Available</span>`
         : `<span class="pill critical">Reserved</span>`;
 
-    // 🔥 Working Request button
     row.insertCell(5).innerHTML =
       med.status === "Available"
         ? `<a class="primary-btn" href="request.html?medicine=${encodeURIComponent(med.name)}">Request</a>`
@@ -186,27 +184,51 @@ function updateExpiryAlerts() {
 }
 
 /***********************
+ * EMAILJS INITIALIZATION
+ ***********************/
+(function () {
+  emailjs.init("m9_yAWBSXiFYtHggT"); // replace with your EmailJS public key
+})();
+
+/***********************
+ * SEND EMAIL ALERT
+ ***********************/
+function sendExpiryEmailAlert() {
+  const criticalMeds = medicines.filter(m => m.expiry <= 7);
+  if (criticalMeds.length === 0) return;
+
+  const medicineList = criticalMeds
+    .map(m => `${m.name} (expires in ${m.expiry} days)`)
+    .join(", ");
+
+  emailjs.send("service_66ksufr", "template_wafbbgi", {
+    to_name: localStorage.getItem("name") || "Admin",
+    location: localStorage.getItem("location") || "Unknown",
+    medicines: medicineList,
+    message: "Critical medicines nearing expiry detected"
+  })
+  .then(() => console.log("✅ Expiry alert email sent"))
+  .catch(err => console.error("❌ Email failed:", err));
+}
+
+/***********************
  * ALERT BUTTON
  ***********************/
 function openNotifications() {
   hideAllDropdowns();
   updateExpiryAlerts();
- 
-
+  sendExpiryEmailAlert(); // send email when alert opened
   document.getElementById("notificationBox").style.display = "block";
 }
 
 /***********************
- * SETTINGS BUTTON
+ * SETTINGS & PROFILE BUTTONS
  ***********************/
 function openSettings() {
   hideAllDropdowns();
   document.getElementById("settingsBox").style.display = "block";
 }
 
-/***********************
- * PROFILE BUTTON
- ***********************/
 function openProfile() {
   hideAllDropdowns();
   document.getElementById("profileBox").style.display = "block";
@@ -235,6 +257,10 @@ function getExpiryLevel(days) {
   if (days <= 60) return "notice";
   return "safe";
 }
+
+/***********************
+ * LOGIN & ROLE HANDLING
+ ***********************/
 function handleRoleChange() {
   const role = document.getElementById("role").value;
   document.getElementById("medicineField").style.display =
@@ -251,37 +277,10 @@ function login() {
     return;
   }
 
-  // Save session (demo)
   localStorage.setItem("role", role);
   localStorage.setItem("name", name);
   localStorage.setItem("location", location);
 
-  // Show dashboard
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-}
-function handleRoleChange() {
-  const role = document.getElementById("role").value;
-  document.getElementById("medicineField").style.display =
-    role === "user" ? "block" : "none";
-}
-
-function login() {
-  const name = document.getElementById("name").value;
-  const location = document.getElementById("location").value;
-  const role = document.getElementById("role").value;
-
-  if (!name || !location || !role) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  // Save session (demo)
-  localStorage.setItem("role", role);
-  localStorage.setItem("name", name);
-  localStorage.setItem("location", location);
-
-  // Show dashboard
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
 }
@@ -290,6 +289,3 @@ function login() {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
-
-
-
