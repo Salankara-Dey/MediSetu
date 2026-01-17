@@ -470,6 +470,21 @@ button:disabled {
     align-items: flex-start;
   }
 }
+.nav-btn {
+  background: #253237;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.nav-btn:hover {
+  opacity: 0.9;
+}
+
 
 
 
