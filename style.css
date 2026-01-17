@@ -43,6 +43,17 @@ table {
 table td, table th {
   color: #253237;
 }
+/* 🔴 Blinking row for high risk medicines */
+.blinking-row {
+  animation: blink 1s infinite;
+  background-color: #ffcccc; /* light red as base */
+}
+
+@keyframes blink {
+  0% { background-color: #ffcccc; }
+  50% { background-color: #ff6666; }
+  100% { background-color: #ffcccc; }
+}
 
 /* ✅ Fix for danger / flashing rows */
 .danger-row td,
@@ -371,6 +382,7 @@ button:disabled {
     align-items: flex-start;
   }
 }
+
 
 
 
