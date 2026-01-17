@@ -354,13 +354,34 @@ function sendTestEmail() {
 /************************************
  * APPLY MEDICINE FILTER (USER LOGIN)
  ************************************/
+/************************************
+ * AUTO-REDIRECT TO DASHBOARD IF LOGGED IN
+ ************************************/
+function autoShowDashboardIfLoggedIn() {
+  const role = localStorage.getItem("role");
+
+  if (!role) return;
+
+  // Hide login, show dashboard
+  const loginScreen = document.getElementById("loginScreen");
+  const dashboard = document.getElementById("dashboard");
+
+  if (loginScreen && dashboard) {
+    loginScreen.style.display = "none";
+    dashboard.style.display = "block";
+  }
+
+  // Reload data so filters / views apply
+  loadMedicinesFromFile();
+}
 
 
 
 /***********************
  * INITIAL LOAD
  ***********************/
-loadMedicinesFromFile();
+autoShowDashboardIfLoggedIn();
+
 
 
 
