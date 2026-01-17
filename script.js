@@ -13,18 +13,39 @@ let medicines = [];
 /***********************
  * LOAD DATA FROM JSON
  ***********************/
+/************************************
+ * GET FILTERED MEDICINES (USER LOGIN)
+ ************************************/
+function getFilteredMedicines(originalMedicines) {
+  const role = localStorage.getItem("role");
+  const selectedMedicine = localStorage.getItem("selectedMedicine");
+
+  if (role !== "user" || !selectedMedicine) {
+    return originalMedicines;
+  }
+
+  return originalMedicines.filter(m =>
+    m.name.toLowerCase().includes(selectedMedicine.toLowerCase())
+  );
+}
+
 async function loadMedicinesFromFile() {
   try {
     const response = await fetch("medicines.json");
-    medicines = await response.json();
-    refreshTable();
-    updateAIAlert();
-    updateExpiryAlerts(); // initial load
+const allMedicines = await response.json();
+
+// 🔹 APPLY FILTER BEFORE RENDERING (DO NOT REMOVE)
+medicines = getFilteredMedicines(allMedicines);
+
+refreshTable();
+updateAIAlert();
+updateExpiryAlerts();
+
   } catch (error) {
     console.error("Failed to load medicines file:", error);
   }
 }
-applyMedicineFilter();
+
 
 /***********************
  * TABLE LOAD
@@ -331,25 +352,14 @@ function sendTestEmail() {
 /************************************
  * APPLY MEDICINE FILTER (USER LOGIN)
  ************************************/
-function applyMedicineFilter() {
-  const selectedMedicine = localStorage.getItem("selectedMedicine");
-  const role = localStorage.getItem("role");
 
-  // Only filter for normal users
-  if (role !== "user" || !selectedMedicine) return;
-
-  medicines = medicines.filter(m =>
-    m.name.toLowerCase().includes(selectedMedicine.toLowerCase())
-  );
-
-  refreshTable();
-}
 
 
 /***********************
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
 
 
