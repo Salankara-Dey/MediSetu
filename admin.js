@@ -1,3 +1,10 @@
+/************************************
+ * 🔒 ADMIN PAGE PROTECTION (OPTIONAL)
+ ************************************/
+if (localStorage.getItem("role") !== "admin") {
+  window.location.href = "index.html";
+}
+
 /*********************************
  * ADMIN AUTH (DEMO ONLY)
  *********************************/
@@ -276,6 +283,7 @@ console.log(
  * INITIALIZE DASHBOARD
  *********************************/
 renderInventory();
+
 
 
 
