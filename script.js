@@ -7,7 +7,7 @@ let medicines = [];
  * EMAILJS INITIALIZATION
  ***********************/
 (function () {
-  emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+  emailjs.init("m9_yAWBSXiFYtHggT"); // Replace with your EmailJS public key
 })();
 
 /***********************
@@ -308,3 +308,4 @@ function sendTestEmail() {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
