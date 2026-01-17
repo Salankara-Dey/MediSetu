@@ -64,6 +64,7 @@ function renderInventory() {
 
   inventory.forEach(item => {
     let status = "safe";
+
     if (item.expiry <= 7 || item.temp === "Critical") {
       status = "critical";
       critical++;
@@ -71,7 +72,13 @@ function renderInventory() {
       status = "warning";
       expiring++;
     }
-checkAlerts(item);
+
+    // 🔹 STEP 2: AUTO-REORDER CHECK (ADDED)
+    const needsReorder = checkAutoReorder(item);
+
+    // 🔹 EXISTING ALERT SYSTEM (UNCHANGED)
+    checkAlerts(item);
+
     table.innerHTML += `
       <tr>
         <td>${item.medicine}</td>
@@ -79,6 +86,13 @@ checkAlerts(item);
         <td>${item.expiry}</td>
         <td>${item.temp}</td>
         <td><span class="badge ${status}">${status.toUpperCase()}</span></td>
+        <td>
+          ${
+            needsReorder
+              ? `<button onclick="autoOrder('${item.medicine}')">Auto Order</button>`
+              : "—"
+          }
+        </td>
       </tr>
     `;
   });
@@ -133,7 +147,7 @@ function syncToGlobalInventory() {
 
 /************************************
  * 🔹 ADD: ADMIN APPROVAL TOGGLE
- * (kept here intentionally, even if unused)
+ * (kept intentionally, even if unused)
  ************************************/
 function toggleApprovalById(id) {
   const all =
@@ -174,6 +188,7 @@ function uploadExcel(file) {
   };
   reader.readAsBinaryString(file);
 }
+
 /************************************
  * 🔹 ADD: STORE ALERTS
  ************************************/
@@ -181,4 +196,28 @@ function checkAlerts(item) {
   if (item.expiry <= 7 || item.temp === "Critical") {
     alert(`⚠ ALERT: ${item.medicine} is high risk`);
   }
+}
+
+/************************************
+ * 🔹 STEP 2: AUTO RE-ORDER CHECK
+ ************************************/
+function checkAutoReorder(item) {
+  if (item.quantity <= 0 || item.expiry <= 0) {
+    return true;
+  }
+  return false;
+}
+
+/************************************
+ * 🔹 STEP 4: AUTO ORDER ACTION
+ ************************************/
+function autoOrder(medicineName) {
+  alert(
+    `📦 AUTO ORDER PLACED\n\nMedicine: ${medicineName}\nSupplier notified.\nEstimated restock: 3 days.`
+  );
+
+  // Future scope:
+  // - Supplier email
+  // - Quantity prediction
+  // - Admin notification
 }
