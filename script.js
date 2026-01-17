@@ -270,7 +270,7 @@ function sendExpiryEmailAlert() {
     .map(m => `${m.name} (expires in ${m.expiry} days)`)
     .join(", ");
 
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+  emailjs.send("service_66ksufr", "template_wafbbgi", {
     to_name: localStorage.getItem("name") || "Admin",
     location: localStorage.getItem("location") || "Unknown",
     medicines: medicineList,
@@ -288,7 +288,7 @@ function sendExpiryEmailAlert() {
  * TEST EMAIL FUNCTION
  ***********************/
 function sendTestEmail() {
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+  emailjs.send("service_66ksufr", "template_wafbbgi", {
     to_name: "Test User",
     location: "Test Location",
     medicines: "Test Medicine 1, Test Medicine 2",
@@ -308,4 +308,5 @@ function sendTestEmail() {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
