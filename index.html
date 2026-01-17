@@ -52,11 +52,10 @@
   </nav>
 
   <!-- ALERT -->
-  <div class="alert">
-    <i class="fa-solid fa-triangle-exclamation"></i>
+  <div class="alert slim-alert">
+    <i class="fa-solid fa-triangle-exclamation mr-3 text-lg"></i>
     <div>
-      <strong>Cold-Chain Breach Detected</strong>
-      <p>Storage Unit #3 exceeded safe temperature range.</p>
+      <strong>High Wastage Risk</strong> – Immediate redistribution recommended for critical batches.
     </div>
   </div>
 
@@ -117,21 +116,86 @@
       <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
     </div>
 
-    <!-- METRICS -->
+    <!-- METRICS / KPI CARDS -->
     <div class="analytics">
-      <div class="card">
-        <span class="label">Live Temperature</span>
-        <h2 id="liveTemp">-- °C</h2>
+      <div class="card kpi-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="label">Current Temperature</span>
+          <i class="fa-solid fa-thermometer-half text-teal-500 text-xl"></i>
+        </div>
+        <h2 id="liveTemp" class="text-4xl font-bold">-- °C</h2>
+        <span id="tempTrend" class="text-sm mt-1 trend-negative" style="display:none;">
+          -0.3% from last hour
+        </span>
       </div>
 
-      <div class="card">
-        <span class="label">Cold Chain Status</span>
-        <h2 id="tempStatus">--</h2>
+      <div class="card kpi-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="label">Cold Chain Status</span>
+          <i class="fa-solid fa-shield-check text-green-500 text-xl"></i>
+        </div>
+        <h2 id="tempStatus" class="text-3xl font-bold">--</h2>
+        <span id="statusTrend" class="text-sm mt-1 text-green-600" style="display:none;">
+          Active
+        </span>
       </div>
 
-      <div class="card">
-        <span class="label">Medicines Reserved Today</span>
-        <h2 id="stats">0</h2>
+      <div class="card kpi-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="label">Medicines At Risk</span>
+          <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl"></i>
+        </div>
+        <h2 id="riskCount" class="text-4xl font-bold text-red-600">0</h2>
+        <span class="text-sm mt-1 text-gray-600">High risk detected</span>
+      </div>
+
+      <div class="card kpi-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="label">Redistributed Today</span>
+          <i class="fa-solid fa-box text-teal-500 text-xl"></i>
+        </div>
+        <h2 id="redistCount" class="text-4xl font-bold">0</h2>
+        <span class="text-sm mt-1 text-green-600">+15% vs last week</span>
+      </div>
+    </div>
+
+    <!-- LIVE TEMPERATURE GAUGE CARD -->
+    <div class="card mb-6">
+      <h3 class="text-lg font-semibold mb-4 flex items-center">
+        Live Temperature Monitoring
+        <i class="fa-solid fa-thermometer-half text-teal-500 ml-2"></i>
+      </h3>
+      <div class="text-5xl font-bold text-teal-600 mb-3" id="liveTempBig">-- °C</div>
+      <div class="w-full bg-gray-200 rounded-full h-4 mb-2 overflow-hidden">
+        <div id="tempProgress" class="bg-teal-500 h-4 rounded-full transition-all duration-500" style="width: 50%;"></div>
+      </div>
+      <p class="text-sm text-gray-600">Safe storage range: 2°C – 8°C</p>
+    </div>
+
+    <!-- REDISTRIBUTION WORKFLOW STEPPER -->
+    <div class="card mb-8">
+      <h3 class="text-lg font-semibold mb-6">Redistribution Workflow</h3>
+      <div class="flex justify-between items-center max-w-3xl mx-auto">
+        <div class="text-center">
+          <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i class="fa-solid fa-exclamation-triangle text-red-600"></i>
+          </div>
+          <p class="text-sm font-medium">Alert Detected</p>
+        </div>
+        <div class="flex-1 h-1 bg-gray-300 mx-4"></div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i class="fa-solid fa-paper-plane text-teal-600"></i>
+          </div>
+          <p class="text-sm font-medium">Request Sent</p>
+        </div>
+        <div class="flex-1 h-1 bg-gray-300 mx-4"></div>
+        <div class="text-center">
+          <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
+            <i class="fa-solid fa-check text-gray-500"></i>
+          </div>
+          <p class="text-sm font-medium">Redistributed</p>
+        </div>
       </div>
     </div>
 
@@ -157,9 +221,6 @@
         </tr>
       </table>
     </div>
-
-    <!-- TEST EMAIL BUTTON -->
-    <!-- (you had many <br> here – kept minimal spacing) -->
 
   </div>
 </div>
