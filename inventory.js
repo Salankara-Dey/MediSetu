@@ -20,6 +20,12 @@ function uploadInventory(e) {
   const file = e.target.files[0];
   if (!file) return;
 
+  // 🔹 ADDED (NON-DESTRUCTIVE): Excel file detection
+  if (file.name.endsWith(".xlsx")) {
+    uploadExcel(file);
+    return; // stop CSV flow
+  }
+
   const reader = new FileReader();
   reader.onload = function (evt) {
     const rows = evt.target.result.split("\n");
@@ -38,7 +44,6 @@ function uploadInventory(e) {
     }
 
     localStorage.setItem("storeInventory", JSON.stringify(inventory));
-    
 
     renderInventory();
     syncToGlobalInventory();
@@ -103,6 +108,7 @@ if (saved) {
   inventory = saved;
   renderInventory();
 }
+
 /************************************
  * 🔹 ADD: SAVE TO GLOBAL INVENTORY
  ************************************/
@@ -124,8 +130,10 @@ function syncToGlobalInventory() {
 
   localStorage.setItem("storeInventories", JSON.stringify(global));
 }
+
 /************************************
  * 🔹 ADD: ADMIN APPROVAL TOGGLE
+ * (kept here intentionally, even if unused)
  ************************************/
 function toggleApprovalById(id) {
   const all =
@@ -140,3 +148,29 @@ function toggleApprovalById(id) {
   alert(`Inventory ${item.approved ? "APPROVED" : "UNAPPROVED"}`);
 }
 
+/************************************
+ * 🔹 ADD: EXCEL UPLOAD SUPPORT
+ ************************************/
+function uploadExcel(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const wb = XLSX.read(e.target.result, { type: "binary" });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet);
+
+    rows.forEach(r => {
+      inventory.push({
+        medicine: r.Medicine,
+        quantity: r.Quantity,
+        expiry: r.ExpiryDays,
+        temp: r.Temperature
+      });
+    });
+
+    localStorage.setItem("storeInventory", JSON.stringify(inventory));
+
+    renderInventory();
+    syncToGlobalInventory();
+  };
+  reader.readAsBinaryString(file);
+}
