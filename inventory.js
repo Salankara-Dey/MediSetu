@@ -1,85 +1,102 @@
 /************************************
- * 🔒 STORE PAGE PROTECTION
+ * STORE PAGE PROTECTION
  ************************************/
 if (localStorage.getItem("role") !== "store") {
   window.location.href = "index.html";
 }
 
+let inventory = [];
+
 /************************************
- * INVENTORY UPLOAD
+ * UPLOAD HANDLING
  ************************************/
-function uploadInventory() {
-  const file = document.getElementById("fileInput").files[0];
-  if (!file) {
-    alert("Please select a CSV file");
-    return;
-  }
+function triggerUpload() {
+  document.getElementById("fileInput").click();
+}
+
+document.getElementById("fileInput").addEventListener("change", uploadInventory);
+
+function uploadInventory(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function (e) {
-    const lines = e.target.result.split("\n");
-    const inventory = [];
+  reader.onload = function (evt) {
+    const rows = evt.target.result.split("\n");
+    inventory = [];
 
-    for (let i = 1; i < lines.length; i++) {
-      const cols = lines[i].split(",");
-      if (cols.length < 4) continue;
+    for (let i = 1; i < rows.length; i++) {
+      const c = rows[i].split(",");
+      if (c.length < 4) continue;
 
       inventory.push({
-        store: localStorage.getItem("name") || "Unknown Store",
-        medicine: cols[0].trim(),
-        quantity: parseInt(cols[1]),
-        expiryDays: parseInt(cols[2]),
-        temperatureRisk: cols[3].trim(),
-        visibleToUsers: true
+        medicine: c[0].trim(),
+        quantity: parseInt(c[1]),
+        expiry: parseInt(c[2]),
+        temp: c[3].trim()
       });
     }
 
-    // Save inventory globally
-    const existing =
-      JSON.parse(localStorage.getItem("storeInventories")) || [];
-
-    localStorage.setItem(
-      "storeInventories",
-      JSON.stringify(existing.concat(inventory))
-    );
-
-    renderPreview(inventory);
-    alert("✅ Inventory uploaded successfully");
+    localStorage.setItem("storeInventory", JSON.stringify(inventory));
+    renderInventory();
   };
 
   reader.readAsText(file);
 }
 
 /************************************
- * PREVIEW TABLE
+ * RENDER INVENTORY
  ************************************/
-function renderPreview(data) {
-  const table = document.getElementById("inventoryPreview");
+function renderInventory() {
+  const table = document.getElementById("inventoryTable");
   table.innerHTML = "";
 
-  data.forEach(item => {
+  let critical = 0;
+  let expiring = 0;
+
+  inventory.forEach(item => {
+    let status = "safe";
+    if (item.expiry <= 7 || item.temp === "Critical") {
+      status = "critical";
+      critical++;
+    } else if (item.expiry <= 30) {
+      status = "warning";
+      expiring++;
+    }
+
     table.innerHTML += `
       <tr>
         <td>${item.medicine}</td>
         <td>${item.quantity}</td>
-        <td>${item.expiryDays}</td>
-        <td>${item.temperatureRisk}</td>
+        <td>${item.expiry}</td>
+        <td>${item.temp}</td>
+        <td><span class="badge ${status}">${status.toUpperCase()}</span></td>
       </tr>
     `;
   });
+
+  document.getElementById("totalItems").innerText = inventory.length;
+  document.getElementById("criticalCount").innerText = critical;
+  document.getElementById("expiringSoon").innerText = expiring;
 }
 
 /************************************
- * EXIT TO HOME
+ * NAVIGATION
  ************************************/
 function exitToHome() {
+  localStorage.removeItem("selectedMedicine");
   window.location.href = "index.html";
 }
-/************************************
- * GO TO MAIN DASHBOARD
- ************************************/
+
 function goToDashboard() {
-  // Keep role and login info intact
   window.location.href = "index.html?from=store";
 }
 
+/************************************
+ * LOAD EXISTING INVENTORY
+ ************************************/
+const saved = JSON.parse(localStorage.getItem("storeInventory"));
+if (saved) {
+  inventory = saved;
+  renderInventory();
+}
