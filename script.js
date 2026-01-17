@@ -40,10 +40,21 @@ function loadTable() {
     row.insertCell(4).innerHTML =
       `<span class="pill ${med.status === "Available" ? "safe" : "critical"}">${med.status}</span>`;
 
-    row.insertCell(5).innerHTML =
-      med.status === "Available"
-        ? `<a class="primary-btn">Request</a>`
-        : `<button disabled>Reserved</button>`;
+    // Action button cell
+let actionCell = row.insertCell(5);
+let btn = document.createElement("button");
+
+if (med.status === "Available") {
+  btn.innerText = "Request";
+  btn.classList.add("primary-btn"); // optional for styling
+  btn.onclick = () => openModal(med);  // trigger the modal
+} else {
+  btn.innerText = "Reserved";
+  btn.disabled = true;
+}
+
+actionCell.appendChild(btn);
+
 
     row.insertCell(6).innerText = generateAIMessage(med);
   });
@@ -144,3 +155,4 @@ function hideAllDropdowns() {
 }
 
 loadMedicinesFromFile();
+
