@@ -221,8 +221,26 @@ function showLocationMatches() {
 
   alert("Location-safe matches generated. Check console.");
 }
+// AI MODEL 2: Demand Forecasting
+function forecastDemand(medicineName) {
+  let requests =
+    JSON.parse(localStorage.getItem("medicineRequests")) || [];
+
+  const demandCount = requests.filter(
+    r => r.medicine === medicineName
+  ).length;
+
+  if (demandCount >= 5) return "High";
+  if (demandCount >= 2) return "Medium";
+  return "Low";
+}
+console.log(
+  "Predicted demand:",
+  forecastDemand("Insulin (Human)")
+);
 
 /*********************************
  * INITIALIZE DASHBOARD
  *********************************/
 renderInventory();
+
