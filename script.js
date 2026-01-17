@@ -26,7 +26,8 @@ function loadTable() {
       med.tempStatus === "Unsafe"
         ? `<span class="pill critical">Critical</span>`
         : `<span class="pill safe">Safe</span>`;
-    row.insertCell(3).innerText = med.riskScore;
+    med.riskScore = calculateRiskScore(med);
+row.insertCell(3).innerText = med.riskScore;
     row.insertCell(4).innerHTML =
       med.status === "Available"
         ? `<span class="pill safe">Available</span>`
@@ -113,4 +114,5 @@ function isHighDemand(medicineName) {
  * INIT
  ***********************/
 loadTable();
+
 
