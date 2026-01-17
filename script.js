@@ -28,9 +28,8 @@ function loadTable() {
     const row = table.insertRow();
 
     // Blink if high risk
-    if (med.riskScore >= 8) {
-      row.classList.add("danger-row", "blinking-row");
-    }
+    if (med.riskScore >= 8) row.classList.add("danger-row", "blinking-row");
+
 
     row.insertCell(0).innerText = med.name;
 
@@ -234,8 +233,58 @@ function getExpiryLevel(days) {
   if (days <= 60) return "notice";
   return "safe";
 }
+function handleRoleChange() {
+  const role = document.getElementById("role").value;
+  document.getElementById("medicineField").style.display =
+    role === "user" ? "block" : "none";
+}
 
+function login() {
+  const name = document.getElementById("name").value;
+  const location = document.getElementById("location").value;
+  const role = document.getElementById("role").value;
+
+  if (!name || !location || !role) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  // Save session (demo)
+  localStorage.setItem("role", role);
+  localStorage.setItem("name", name);
+  localStorage.setItem("location", location);
+
+  // Show dashboard
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+}
+function handleRoleChange() {
+  const role = document.getElementById("role").value;
+  document.getElementById("medicineField").style.display =
+    role === "user" ? "block" : "none";
+}
+
+function login() {
+  const name = document.getElementById("name").value;
+  const location = document.getElementById("location").value;
+  const role = document.getElementById("role").value;
+
+  if (!name || !location || !role) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  // Save session (demo)
+  localStorage.setItem("role", role);
+  localStorage.setItem("name", name);
+  localStorage.setItem("location", location);
+
+  // Show dashboard
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+}
 /***********************
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
