@@ -108,11 +108,28 @@ function isHighDemand(medicineName) {
   ];
   return highDemandMeds.includes(medicineName);
 }
+// AI FEATURE 4: Explainable AI Recommendation
+function generateAIMessage(med) {
+  if (med.riskScore >= 8) {
+    return "⚠ High risk of wastage. Immediate redistribution recommended.";
+  }
+
+  if (med.expiry <= 7) {
+    return "⏳ Expiring soon. Suggest nearby redistribution.";
+  }
+
+  if (med.tempStatus === "Unsafe") {
+    return "🌡 Temperature breach detected. Cold-chain attention required.";
+  }
+
+  return "✅ Stock is safe. No immediate action required.";
+}
 
 
 /***********************
  * INIT
  ***********************/
 loadTable();
+
 
 
