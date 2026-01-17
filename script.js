@@ -377,8 +377,11 @@ function sendTestEmail() {
  ************************************/
 function autoShowDashboardIfLoggedIn() {
   const role = localStorage.getItem("role");
+const cameFromStore = new URLSearchParams(window.location.search).get("from");
 
-  if (!role) return;
+// 🔹 Only auto-skip login if explicitly coming from store dashboard
+if (!role || cameFromStore !== "store") return;
+
 
   // Hide login, show dashboard
   const loginScreen = document.getElementById("loginScreen");
@@ -399,6 +402,7 @@ function autoShowDashboardIfLoggedIn() {
  * INITIAL LOAD
  ***********************/
 autoShowDashboardIfLoggedIn();
+
 
 
 
