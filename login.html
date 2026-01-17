@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Role Based Login</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+
+<body class="login-body">
+
+<div class="login-card">
+  <h2>Login</h2>
+  <p class="muted">Select your role to continue</p>
+
+  <input type="text" id="name" placeholder="Your Name" />
+  <input type="text" id="location" placeholder="Location" />
+
+  <select id="role" onchange="handleRoleChange()">
+    <option value="">Select Role</option>
+    <option value="admin">Admin</option>
+    <option value="user">User / Buyer</option>
+    <option value="store">Medical Store</option>
+  </select>
+
+  <!-- USER ONLY -->
+  <div id="medicineField" style="display:none;">
+    <input type="text" id="medicine" placeholder="Required Medicine" />
+  </div>
+
+  <button onclick="login()">Login</button>
+
+  <!-- RESULT -->
+  <p id="result" class="result"></p>
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>
