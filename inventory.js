@@ -71,7 +71,7 @@ function renderInventory() {
       status = "warning";
       expiring++;
     }
-
+checkAlerts(item);
     table.innerHTML += `
       <tr>
         <td>${item.medicine}</td>
@@ -173,4 +173,12 @@ function uploadExcel(file) {
     syncToGlobalInventory();
   };
   reader.readAsBinaryString(file);
+}
+/************************************
+ * 🔹 ADD: STORE ALERTS
+ ************************************/
+function checkAlerts(item) {
+  if (item.expiry <= 7 || item.temp === "Critical") {
+    alert(`⚠ ALERT: ${item.medicine} is high risk`);
+  }
 }
