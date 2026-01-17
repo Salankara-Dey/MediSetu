@@ -124,4 +124,19 @@ function syncToGlobalInventory() {
 
   localStorage.setItem("storeInventories", JSON.stringify(global));
 }
+/************************************
+ * 🔹 ADD: ADMIN APPROVAL TOGGLE
+ ************************************/
+function toggleApprovalById(id) {
+  const all =
+    JSON.parse(localStorage.getItem("storeInventories")) || [];
+
+  const item = all.find(i => i.id === id);
+  if (!item) return;
+
+  item.approved = !item.approved;
+
+  localStorage.setItem("storeInventories", JSON.stringify(all));
+  alert(`Inventory ${item.approved ? "APPROVED" : "UNAPPROVED"}`);
+}
 
