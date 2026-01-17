@@ -245,9 +245,50 @@ function getExpiryLevel(days) {
   if (days <= 60) return "notice";
   return "safe";
 }
+function sendExpiryEmail(item, daysLeft) {
+  emailjs.send(
+    "service_66ksufr",
+    "template_wafbbgi",
+    {
+      medicine_name: item.medicine,
+      store_name: item.storeName,
+      to_email: item.ownerEmail,
+      days_left: daysLeft,
+      expiry_date: item.expiryDate
+    }
+  )
+  .then(() => {
+    console.log(
+      `📧 Email sent to ${item.ownerEmail} (${daysLeft} days alert)`
+    );
+  })
+  .catch(error => {
+    console.error("❌ EmailJS Error:", error);
+  });
+}
+// TEMP INVENTORY (FOR EMAIL TESTING)
+const demoInventory = [
+  {
+    medicine: "Insulin (Human)",
+    expiryDate: "2026-01-24", // 👈 7 days from today (adjust if needed)
+    quantity: 20,
+    location: "delhi",
+    ownerEmail: "deysalankara@gmail.com", // 👈 PUT YOUR EMAIL HERE
+    storeName: "Pharmacy A"
+  }
+];
+
+// Save inventory
+localStorage.setItem(
+  "inventories",
+  JSON.stringify(demoInventory)
+);
+
+checkExpiryAlerts();
 
 /***********************
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
