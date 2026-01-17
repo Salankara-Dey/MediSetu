@@ -3,29 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin Login</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body.auth-body {
+      margin:0;
+      font-family: "Segoe UI", sans-serif;
+      background: #E0FBFC;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    .auth-card {
+      background:#C2DFE3;
+      padding:30px 40px;
+      border-radius:16px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.1);
+      text-align:center;
+      width:320px;
+    }
+
+    .auth-card h1 { margin:0; font-size:24px; }
+    .auth-subtitle { color:#5C6B73; font-size:14px; margin:6px 0 20px; }
+
+    input {
+      width:100%;
+      padding:10px;
+      margin:8px 0;
+      border-radius:8px;
+      border:1px solid #9DB4C0;
+      font-size:14px;
+    }
+
+    .primary-btn {
+      width:100%;
+      padding:10px;
+      background:#253237;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      margin-top:10px;
+      font-size:14px;
+    }
+
+    .error-text {
+      color:red;
+      margin-top:10px;
+      font-size:13px;
+    }
+  </style>
 </head>
 
 <body class="auth-body">
 
-<div class="auth-container">
+<div class="auth-card">
+  <h1>🔐 Admin Access</h1>
+  <p class="auth-subtitle">
+    Secure login for system administrators
+  </p>
 
-  <div class="auth-card">
-    <h1>🔐 Admin Access</h1>
-    <p class="auth-subtitle">
-      Secure login for system administrators
-    </p>
+  <input type="text" id="adminUser" placeholder="Username">
+  <input type="password" id="adminPass" placeholder="Password">
 
-    <input type="text" id="adminUser" placeholder="Username">
-    <input type="password" id="adminPass" placeholder="Password">
+  <button class="primary-btn" onclick="adminLogin()">Login</button>
 
-    <button class="primary-btn" onclick="adminLogin()">Login</button>
-
-    <p id="loginError" class="error-text"></p>
-  </div>
-
+  <p id="loginError" class="error-text"></p>
 </div>
 
-<script src="admin.js"></script>
+<script>
+/*********************************
+ * ADMIN LOGIN FUNCTION
+ *********************************/
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "admin123";
+
+function adminLogin() {
+  const user = document.getElementById("adminUser").value;
+  const pass = document.getElementById("adminPass").value;
+  const error = document.getElementById("loginError");
+
+  if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+    sessionStorage.setItem("adminLoggedIn", "true");
+    window.location.href = "admin-dashboard.html"; // redirect to dashboard
+  } else {
+    error.innerText = "Invalid credentials";
+  }
+}
+</script>
 </body>
 </html>
