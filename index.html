@@ -32,7 +32,10 @@
   </div>
 
   <div class="nav-right">
-    <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
+    <div class="icon-wrapper">
+      <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
+      <span id="alertCount" class="badge">0</span>
+    </div>
     <i class="fa-solid fa-gear" onclick="openSettings()"></i>
     <div class="avatar" onclick="openProfile()">A</div>
   </div>
@@ -41,7 +44,7 @@
 <!-- 🔔 NOTIFICATION DROPDOWN -->
 <div id="notificationBox" class="dropdown-box" style="display:none;"></div>
 
-<!-- ⚙️ SETTINGS DROPDOWN -->
+<!-- ⚙️ SETTINGS -->
 <div id="settingsBox" class="dropdown-box" style="display:none;">
   <strong>Settings</strong>
   <p>Theme</p>
@@ -49,7 +52,7 @@
   <p>Logout</p>
 </div>
 
-<!-- 👤 PROFILE DROPDOWN -->
+<!-- 👤 PROFILE -->
 <div id="profileBox" class="dropdown-box" style="display:none;">
   <strong>User Profile</strong>
   <p>Admin</p>
@@ -117,13 +120,5 @@
 </div>
 
 <script src="script.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  (function(){
-    emailjs.init("m9_yAWBSXiFYtHggT");
-  })();
-</script>
-
 </body>
 </html>
