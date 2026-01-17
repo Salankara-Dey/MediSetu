@@ -38,7 +38,10 @@ function uploadInventory(e) {
     }
 
     localStorage.setItem("storeInventory", JSON.stringify(inventory));
+    
+
     renderInventory();
+    syncToGlobalInventory();
   };
 
   reader.readAsText(file);
@@ -100,3 +103,25 @@ if (saved) {
   inventory = saved;
   renderInventory();
 }
+/************************************
+ * 🔹 ADD: SAVE TO GLOBAL INVENTORY
+ ************************************/
+function syncToGlobalInventory() {
+  const global =
+    JSON.parse(localStorage.getItem("storeInventories")) || [];
+
+  inventory.forEach(item => {
+    global.push({
+      id: Date.now() + Math.random(),
+      store: localStorage.getItem("name") || "Medical Store",
+      medicine: item.medicine,
+      quantity: item.quantity,
+      expiryDays: item.expiry,
+      temperatureRisk: item.temp,
+      approved: false   // 🔴 Admin must approve
+    });
+  });
+
+  localStorage.setItem("storeInventories", JSON.stringify(global));
+}
+
