@@ -12,7 +12,7 @@ async function loadMedicinesFromFile() {
     medicines = await response.json();
     refreshTable();
     updateAIAlert();
-    updateExpiryAlerts();
+    updateExpiryAlerts(); // initial load
   } catch (error) {
     console.error("Failed to load medicines file:", error);
   }
@@ -27,13 +27,15 @@ function loadTable() {
   medicines.forEach(med => {
     const row = table.insertRow();
 
-    if (med.riskScore >= 8) row.classList.add("danger-row");
+    // Blink if high risk
+    if (med.riskScore >= 8) {
+      row.classList.add("danger-row", "blinking-row");
+    }
 
     row.insertCell(0).innerText = med.name;
 
     const expiryLevel = getExpiryLevel(med.expiry);
-    row.insertCell(1).innerHTML =
-      `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
+    row.insertCell(1).innerHTML = `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
 
     row.insertCell(2).innerHTML =
       med.tempStatus === "Unsafe"
@@ -48,10 +50,13 @@ function loadTable() {
         ? `<span class="pill safe">Available</span>`
         : `<span class="pill critical">Reserved</span>`;
 
+    // 🔥 Working Request button
     row.insertCell(5).innerHTML =
       med.status === "Available"
         ? `<a class="primary-btn" href="request.html?medicine=${encodeURIComponent(med.name)}">Request</a>`
         : `<button disabled>Reserved</button>`;
+
+    row.insertCell(6).innerText = generateAIMessage(med);
   });
 
   updateStats();
@@ -70,6 +75,7 @@ function refreshTable() {
       <th>Risk Score</th>
       <th>Status</th>
       <th>Action</th>
+      <th>AI Recommendation</th>
     </tr>
   `;
   loadTable();
@@ -131,15 +137,11 @@ function calculateRiskScore(med) {
 }
 
 function isHighDemand(name) {
-  return [
-    "Insulin (Human)",
-    "COVID-19 Vaccine",
-    "MMR Vaccine"
-  ].some(med => name.includes(med));
+  return ["Insulin (Human)", "COVID-19 Vaccine", "MMR Vaccine"].some(med => name.includes(med));
 }
 
 /***********************
- * AI ALERTS
+ * AI ALERT (TOP BANNER)
  ***********************/
 function generateAIMessage(med) {
   if (med.riskScore >= 8)
@@ -166,28 +168,71 @@ function updateAIAlert() {
 }
 
 /***********************
- * EXPIRY ALERTS
+ * EXPIRY ALERT DROPDOWN (≤ 7 DAYS)
+ ***********************/
+function updateExpiryAlerts() {
+  const alertBox = document.getElementById("notificationBox");
+  const criticalMeds = medicines.filter(m => m.expiry <= 7);
+
+  alertBox.innerHTML = "<strong>Critical Expiry Alerts</strong>";
+
+  if (criticalMeds.length === 0) {
+    alertBox.innerHTML += "<p>No medicines expiring in 7 days</p>";
+    return;
+  }
+
+  criticalMeds.forEach(m => {
+    alertBox.innerHTML += `<p>⚠ ${m.name} — expires in ${m.expiry} days</p>`;
+  });
+}
+
+/***********************
+ * ALERT BUTTON
+ ***********************/
+function openNotifications() {
+  hideAllDropdowns();
+  updateExpiryAlerts();
+  document.getElementById("notificationBox").style.display = "block";
+}
+
+/***********************
+ * SETTINGS BUTTON
+ ***********************/
+function openSettings() {
+  hideAllDropdowns();
+  document.getElementById("settingsBox").style.display = "block";
+}
+
+/***********************
+ * PROFILE BUTTON
+ ***********************/
+function openProfile() {
+  hideAllDropdowns();
+  document.getElementById("profileBox").style.display = "block";
+}
+
+/***********************
+ * HIDE ALL DROPDOWNS
+ ***********************/
+function hideAllDropdowns() {
+  ["notificationBox", "settingsBox", "profileBox"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".nav-right")) hideAllDropdowns();
+});
+
+/***********************
+ * EXPIRY PILL COLORS
  ***********************/
 function getExpiryLevel(days) {
   if (days <= 7) return "critical";
   if (days <= 30) return "warning";
   if (days <= 60) return "notice";
   return "safe";
-}
-
-function updateExpiryAlerts() {
-  const alerts = medicines.filter(m => m.expiry <= 30);
-  const box = document.getElementById("notificationBox");
-
-  box.innerHTML = "<strong>Expiry Alerts</strong>";
-  if (alerts.length === 0) {
-    box.innerHTML += "<p>No urgent alerts</p>";
-    return;
-  }
-
-  alerts.forEach(m =>
-    box.innerHTML += `<p>⚠ ${m.name} expires in ${m.expiry} days</p>`
-  );
 }
 
 /***********************
