@@ -56,6 +56,33 @@ body {
   margin: auto;
   padding: 0 16px;
 }
+/* 🔔 Notification Badge */
+.icon-wrapper {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+}
+
+/* 🚨 Critical Row Flash */
+.flash-row {
+  animation: flash 1.2s infinite;
+}
+
+@keyframes flash {
+  0% { background-color: #ffe5e5; }
+  50% { background-color: #ffb3b3; }
+  100% { background-color: #ffe5e5; }
+}
 
 /* ===============================
    HEADER
@@ -329,4 +356,5 @@ button:disabled {
     align-items: flex-start;
   }
 }
+
 
