@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Medical Store Inventory Upload</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #E0FBFC;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: #C2DFE3;
+      padding: 30px;
+      border-radius: 16px;
+      width: 500px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 { margin-top: 0; }
+
+    input[type="file"] {
+      margin: 15px 0;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #9DB4C0;
+      padding: 6px;
+      text-align: left;
+    }
+
+    th {
+      background: #9DB4C0;
+    }
+
+    button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #253237;
+      color: white;
+      margin-top: 10px;
+      margin-right: 6px;
+    }
+
+    button.secondary {
+      background: #5C6B73;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <h2>🏪 Medical Store Inventory Upload</h2>
+  <p>Upload your inventory in CSV format</p>
+
+  <input type="file" id="fileInput" accept=".csv" />
+  <br>
+
+  <button onclick="uploadInventory()">Upload Inventory</button>
+  <button class="secondary" onclick="exitToHome()">Exit</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Medicine</th>
+        <th>Quantity</th>
+        <th>Expiry (days)</th>
+        <th>Temp Status</th>
+      </tr>
+    </thead>
+    <tbody id="inventoryPreview"></tbody>
+  </table>
+</div>
+
+<script src="inventory.js"></script>
+</body>
+</html>
