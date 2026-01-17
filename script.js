@@ -1,109 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Medicine Redistribution Portal</title>
+let medicines = [];
 
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-  />
+/***********************
+ * LOAD DATA
+ ***********************/
+async function loadMedicinesFromFile() {
+  const res = await fetch("medicines.json");
+  medicines = await res.json();
+  refreshTable();
+  updateExpiryAlerts();
+}
 
-  <link rel="stylesheet" href="style.css" />
-</head>
+/***********************
+ * TABLE
+ ***********************/
+function loadTable() {
+  const table = document.getElementById("medicineTable");
 
-<body>
+  medicines.forEach(med => {
+    const row = table.insertRow();
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <div class="brand">
-    <img src="logo.jpeg" class="logo-img" />
-    <div>
-      <h1>MediSetu</h1>
-      <span>Cold-Chain Medicine Redistribution Portal</span>
-    </div>
-  </div>
+    med.riskScore = calculateRiskScore(med);
 
-  <div class="nav-right">
-    <div class="icon-wrapper">
-      <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
-      <span id="alertCount" class="badge">0</span>
-    </div>
-    <i class="fa-solid fa-gear" onclick="openSettings()"></i>
-    <div class="avatar" onclick="openProfile()">A</div>
-  </div>
-</nav>
+    if (med.riskScore >= 8) row.classList.add("danger-row");
+    if (med.expiry <= 3 || med.riskScore >= 9) row.classList.add("flash-row");
 
-<!-- 🔔 NOTIFICATION DROPDOWN -->
-<div id="notificationBox" class="dropdown-box" style="display:none;"></div>
+    row.insertCell(0).innerText = med.name;
 
-<!-- ⚙️ SETTINGS -->
-<div id="settingsBox" class="dropdown-box" style="display:none;">
-  <strong>Settings</strong>
-  <p>Theme</p>
-  <p>Notifications</p>
-  <p>Logout</p>
-</div>
+    const expiryLevel = getExpiryLevel(med.expiry);
+    row.insertCell(1).innerHTML =
+      `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
 
-<!-- 👤 PROFILE -->
-<div id="profileBox" class="dropdown-box" style="display:none;">
-  <strong>User Profile</strong>
-  <p>Admin</p>
-  <p>Distributor</p>
-</div>
+    row.insertCell(2).innerHTML =
+      med.tempStatus === "Unsafe"
+        ? `<span class="pill critical">Critical</span>`
+        : `<span class="pill safe">Safe</span>`;
 
-<!-- ALERT -->
-<div class="alert">
-  <i class="fa-solid fa-triangle-exclamation"></i>
-  <div>
-    <strong>Cold-Chain Breach Detected</strong>
-    <p>Storage Unit #3 exceeded safe temperature range.</p>
-  </div>
-</div>
+    row.insertCell(3).innerText = med.riskScore;
 
-<!-- DASHBOARD -->
-<div class="dashboard">
+    row.insertCell(4).innerHTML =
+      `<span class="pill ${med.status === "Available" ? "safe" : "critical"}">${med.status}</span>`;
 
-  <div class="header">
-    <h1>🏥 Medicine Redistribution Portal</h1>
-    <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
-  </div>
+    row.insertCell(5).innerHTML =
+      med.status === "Available"
+        ? `<a class="primary-btn">Request</a>`
+        : `<button disabled>Reserved</button>`;
 
-  <!-- METRICS -->
-  <div class="analytics">
-    <div class="card">
-      <span class="label">Live Temperature</span>
-      <h2 id="liveTemp">-- °C</h2>
-    </div>
+    row.insertCell(6).innerText = generateAIMessage(med);
+  });
 
-    <div class="card">
-      <span class="label">Cold Chain Status</span>
-      <h2 id="tempStatus">--</h2>
-    </div>
+  updateStats();
+}
 
-    <div class="card">
-      <span class="label">Medicines Reserved Today</span>
-      <h2 id="stats">0</h2>
-    </div>
-  </div>
-
-  <!-- SEARCH -->
-  <input
-    type="text"
-    id="searchInput"
-    placeholder="🔍 Search medicine or pharmacy..."
-    onkeyup="searchMedicines()"
-  />
-
-  <!-- TABLE -->
-  <table id="medicineTable">
+/***********************
+ * REFRESH
+ ***********************/
+function refreshTable() {
+  const table = document.getElementById("medicineTable");
+  table.innerHTML = `
     <tr>
       <th>Medicine</th>
       <th>Expiry</th>
@@ -112,13 +65,82 @@
       <th>Status</th>
       <th>Action</th>
       <th>AI Recommendation</th>
-    </tr>
-  </table>
+    </tr>`;
+  loadTable();
+}
 
-  <br />
-  <a href="admin-login.html">Admin Portal</a>
-</div>
+/***********************
+ * NOTIFICATION + BADGE
+ ***********************/
+function updateExpiryAlerts() {
+  const alerts = medicines.filter(m => m.expiry <= 7);
+  const box = document.getElementById("notificationBox");
+  const badge = document.getElementById("alertCount");
 
-<script src="script.js"></script>
-</body>
-</html>
+  box.innerHTML = "<strong>Critical Expiry Alerts</strong>";
+
+  if (alerts.length === 0) {
+    box.innerHTML += "<p>No critical alerts</p>";
+    badge.style.display = "none";
+    return;
+  }
+
+  alerts.forEach(m => {
+    box.innerHTML += `<p>⚠ ${m.name} — ${m.expiry} days</p>`;
+  });
+
+  badge.innerText = alerts.length;
+  badge.style.display = "inline-block";
+}
+
+/***********************
+ * HELPERS
+ ***********************/
+function calculateRiskScore(med) {
+  let score = 0;
+  if (med.expiry <= 7) score += 5;
+  if (med.tempStatus === "Unsafe") score += 4;
+  return Math.min(score, 10);
+}
+
+function generateAIMessage(med) {
+  if (med.riskScore >= 9) return "🚨 Immediate redistribution required";
+  if (med.expiry <= 7) return "⏳ Expiring soon";
+  return "✅ Stock stable";
+}
+
+function getExpiryLevel(days) {
+  if (days <= 7) return "critical";
+  if (days <= 30) return "warning";
+  return "safe";
+}
+
+function updateStats() {
+  document.getElementById("stats").innerText =
+    medicines.filter(m => m.status !== "Available").length;
+}
+
+/***********************
+ * DROPDOWNS
+ ***********************/
+function openNotifications() {
+  hideAllDropdowns();
+  updateExpiryAlerts();
+  document.getElementById("notificationBox").style.display = "block";
+}
+function openSettings() {
+  hideAllDropdowns();
+  document.getElementById("settingsBox").style.display = "block";
+}
+function openProfile() {
+  hideAllDropdowns();
+  document.getElementById("profileBox").style.display = "block";
+}
+function hideAllDropdowns() {
+  ["notificationBox", "settingsBox", "profileBox"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
+
+loadMedicinesFromFile();
