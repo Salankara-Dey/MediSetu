@@ -1,6 +1,8 @@
 /***********************
  * DATA (FILE-BASED LOAD)
  ***********************/
+console.log("Alert button clicked");
+
 let medicines = [];
 
 /***********************
@@ -189,6 +191,8 @@ function updateExpiryAlerts() {
 /***********************
  * 🔔 ALERT BUTTON HANDLER
  ***********************/
+console.log("Alert button clicked");
+
 function openNotifications() {
   hideAllDropdowns();
   updateExpiryAlerts();
@@ -222,8 +226,15 @@ function hideAllDropdowns() {
 }
 
 document.addEventListener("click", e => {
-  if (!e.target.closest(".nav-right")) hideAllDropdowns();
+  if (
+    !e.target.closest("#notificationBox") &&
+    !e.target.closest("#settingsBox") &&
+    !e.target.closest(".nav-right")
+  ) {
+    hideAllDropdowns();
+  }
 });
+
 
 /***********************
  * EXPIRY PILL COLORS
@@ -239,3 +250,4 @@ function getExpiryLevel(days) {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
