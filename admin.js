@@ -238,9 +238,28 @@ console.log(
   "Predicted demand:",
   forecastDemand("Insulin (Human)")
 );
+// AI MODEL 3: Smart Matching Engine
+function aiMatch(request, inventories) {
+  let candidates = inventories.filter(inv =>
+    inv.medicine === request.medicine &&
+    inv.location === request.location
+  );
+
+  candidates.forEach(inv => {
+    inv.aiScore =
+      (10 - inv.expiryDays) +
+      (inv.temperatureRisk === "Critical" ? 5 : 2) +
+      (request.urgency === "High" ? 3 : 1);
+  });
+
+  candidates.sort((a, b) => b.aiScore - a.aiScore);
+  return candidates[0];
+}
+
 
 /*********************************
  * INITIALIZE DASHBOARD
  *********************************/
 renderInventory();
+
 
