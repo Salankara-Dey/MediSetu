@@ -255,11 +255,27 @@ function aiMatch(request, inventories) {
   candidates.sort((a, b) => b.aiScore - a.aiScore);
   return candidates[0];
 }
+// AI FEATURE 4: Admin Recommendation Engine
+function adminAIRecommendation(request, med) {
+  if (request.urgency === "High" && med.riskScore >= 8) {
+    return "🔥 Priority match: High urgency + high wastage risk.";
+  }
+
+  if (med.expiry <= 7) {
+    return "⏳ Immediate redistribution advised.";
+  }
+
+  return "ℹ Standard redistribution workflow.";
+}
+console.log(
+  adminAIRecommendation(request, matchedMedicine)
+);
 
 
 /*********************************
  * INITIALIZE DASHBOARD
  *********************************/
 renderInventory();
+
 
 
