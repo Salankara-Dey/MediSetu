@@ -280,6 +280,8 @@ localStorage.setItem("selectedMedicine", medicine);
 
   document.getElementById("loginScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
+  // 🔹 FORCE RELOAD DATA AFTER LOGIN (DO NOT REMOVE)
+loadMedicinesFromFile();
 }
 /************************************************
  * 🔹 ADDED: ROLE-BASED REDIRECTION (DO NOT EDIT)
@@ -359,6 +361,7 @@ function sendTestEmail() {
  * INITIAL LOAD
  ***********************/
 loadMedicinesFromFile();
+
 
 
 
