@@ -81,8 +81,36 @@ function fetchTemperatureFromBlynk() {
 }
 
 setInterval(fetchTemperatureFromBlynk, 5000);
+// AI MODEL 1: Dynamic Risk Scoring
+function calculateRiskScore(med) {
+  let score = 0;
+
+  // Expiry factor
+  if (med.expiry <= 7) score += 5;
+  else if (med.expiry <= 30) score += 3;
+  else score += 1;
+
+  // Temperature factor
+  if (med.tempStatus === "Unsafe") score += 4;
+
+  // Demand factor (simulated AI)
+  if (isHighDemand(med.name)) score += 2;
+
+  return Math.min(score, 10);
+}
+
+function isHighDemand(medicineName) {
+  const highDemandMeds = [
+    "Insulin (Human)",
+    "COVID‑19 Vaccine",
+    "MMR Vaccine"
+  ];
+  return highDemandMeds.includes(medicineName);
+}
+
 
 /***********************
  * INIT
  ***********************/
 loadTable();
+
