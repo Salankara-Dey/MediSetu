@@ -1,68 +1,109 @@
-/***********************
- * DATA (FILE-BASED LOAD)
- ***********************/
-let medicines = [];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Medicine Redistribution Portal</title>
 
-/***********************
- * LOAD DATA FROM JSON
- ***********************/
-async function loadMedicinesFromFile() {
-  try {
-    const response = await fetch("medicines.json");
-    medicines = await response.json();
-    refreshTable();
-    updateAIAlert();
-    updateExpiryAlerts(); // initial load
-  } catch (error) {
-    console.error("Failed to load medicines file:", error);
-  }
-}
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
 
-/***********************
- * TABLE LOAD
- ***********************/
-function loadTable() {
-  const table = document.getElementById("medicineTable");
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  medicines.forEach(med => {
-    const row = table.insertRow();
+<body>
 
-    if (med.riskScore >= 8) row.classList.add("danger-row");
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="brand">
+    <img src="logo.jpeg" class="logo-img" />
+    <div>
+      <h1>MediSetu</h1>
+      <span>Cold-Chain Medicine Redistribution Portal</span>
+    </div>
+  </div>
 
-    row.insertCell(0).innerText = med.name;
+  <div class="nav-right">
+    <div class="icon-wrapper">
+      <i class="fa-regular fa-bell" onclick="openNotifications()"></i>
+      <span id="alertCount" class="badge">0</span>
+    </div>
+    <i class="fa-solid fa-gear" onclick="openSettings()"></i>
+    <div class="avatar" onclick="openProfile()">A</div>
+  </div>
+</nav>
 
-    const expiryLevel = getExpiryLevel(med.expiry);
-    row.insertCell(1).innerHTML =
-      `<span class="pill ${expiryLevel}">${med.expiry} days</span>`;
+<!-- 🔔 NOTIFICATION DROPDOWN -->
+<div id="notificationBox" class="dropdown-box" style="display:none;"></div>
 
-    row.insertCell(2).innerHTML =
-      med.tempStatus === "Unsafe"
-        ? `<span class="pill critical">Critical</span>`
-        : `<span class="pill safe">Safe</span>`;
+<!-- ⚙️ SETTINGS -->
+<div id="settingsBox" class="dropdown-box" style="display:none;">
+  <strong>Settings</strong>
+  <p>Theme</p>
+  <p>Notifications</p>
+  <p>Logout</p>
+</div>
 
-    med.riskScore = calculateRiskScore(med);
-    row.insertCell(3).innerText = med.riskScore;
+<!-- 👤 PROFILE -->
+<div id="profileBox" class="dropdown-box" style="display:none;">
+  <strong>User Profile</strong>
+  <p>Admin</p>
+  <p>Distributor</p>
+</div>
 
-    row.insertCell(4).innerHTML =
-      med.status === "Available"
-        ? `<span class="pill safe">Available</span>`
-        : `<span class="pill critical">Reserved</span>`;
+<!-- ALERT -->
+<div class="alert">
+  <i class="fa-solid fa-triangle-exclamation"></i>
+  <div>
+    <strong>Cold-Chain Breach Detected</strong>
+    <p>Storage Unit #3 exceeded safe temperature range.</p>
+  </div>
+</div>
 
-    row.insertCell(5).innerHTML =
-      med.status === "Available"
-        ? `<a class="primary-btn" href="request.html?medicine=${encodeURIComponent(med.name)}">Request</a>`
-        : `<button disabled>Reserved</button>`;
-  });
+<!-- DASHBOARD -->
+<div class="dashboard">
 
-  updateStats();
-}
+  <div class="header">
+    <h1>🏥 Medicine Redistribution Portal</h1>
+    <p class="subtitle">Real-time Cold-Chain Monitoring & Smart Redistribution</p>
+  </div>
 
-/***********************
- * REFRESH TABLE
- ***********************/
-function refreshTable() {
-  const table = document.getElementById("medicineTable");
-  table.innerHTML = `
+  <!-- METRICS -->
+  <div class="analytics">
+    <div class="card">
+      <span class="label">Live Temperature</span>
+      <h2 id="liveTemp">-- °C</h2>
+    </div>
+
+    <div class="card">
+      <span class="label">Cold Chain Status</span>
+      <h2 id="tempStatus">--</h2>
+    </div>
+
+    <div class="card">
+      <span class="label">Medicines Reserved Today</span>
+      <h2 id="stats">0</h2>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="🔍 Search medicine or pharmacy..."
+    onkeyup="searchMedicines()"
+  />
+
+  <!-- TABLE -->
+  <table id="medicineTable">
     <tr>
       <th>Medicine</th>
       <th>Expiry</th>
@@ -70,172 +111,14 @@ function refreshTable() {
       <th>Risk Score</th>
       <th>Status</th>
       <th>Action</th>
+      <th>AI Recommendation</th>
     </tr>
-  `;
-  loadTable();
-}
+  </table>
 
-/***********************
- * SEARCH
- ***********************/
-function searchMedicines() {
-  const input = document.getElementById("searchInput").value.toLowerCase();
-  const rows = document.getElementById("medicineTable").rows;
+  <br />
+  <a href="admin-login.html">Admin Portal</a>
+</div>
 
-  for (let i = 1; i < rows.length; i++) {
-    rows[i].style.display =
-      rows[i].innerText.toLowerCase().includes(input) ? "" : "none";
-  }
-}
-
-/***********************
- * ANALYTICS
- ***********************/
-function updateStats() {
-  document.getElementById("stats").innerText =
-    medicines.filter(m => m.status !== "Available").length;
-}
-
-/***********************
- * BLYNK REAL-TIME TEMPERATURE
- ***********************/
-const BLYNK_TOKEN = "O_99-ewWBAop_gdx5ADa4PekLYtCYnHq";
-const TEMP_PIN = "V0";
-
-function fetchTemperatureFromBlynk() {
-  fetch(`https://blynk.cloud/external/api/get?token=${BLYNK_TOKEN}&pin=${TEMP_PIN}`)
-    .then(res => res.text())
-    .then(temp => {
-      document.getElementById("liveTemp").innerText = `${temp} °C`;
-      document.getElementById("tempStatus").innerText =
-        temp < 2 || temp > 8 ? "❌ Risk" : "✅ Safe";
-    });
-}
-setInterval(fetchTemperatureFromBlynk, 5000);
-
-/***********************
- * AI MODEL: RISK SCORING
- ***********************/
-function calculateRiskScore(med) {
-  let score = 0;
-
-  if (med.expiry <= 7) score += 5;
-  else if (med.expiry <= 30) score += 3;
-  else score += 1;
-
-  if (med.tempStatus === "Unsafe") score += 4;
-
-  if (isHighDemand(med.name)) score += 2;
-
-  return Math.min(score, 10);
-}
-
-function isHighDemand(name) {
-  return [
-    "Insulin (Human)",
-    "COVID-19 Vaccine",
-    "MMR Vaccine"
-  ].some(med => name.includes(med));
-}
-
-/***********************
- * AI ALERT (TOP BANNER)
- ***********************/
-function generateAIMessage(med) {
-  if (med.riskScore >= 8)
-    return "⚠ High risk of wastage. Immediate redistribution recommended.";
-
-  if (med.expiry <= 7)
-    return "⏳ Expiring soon. Suggest nearby redistribution.";
-
-  if (med.tempStatus === "Unsafe")
-    return "🌡 Temperature breach detected. Cold-chain attention required.";
-
-  return "✅ Stock is safe.";
-}
-
-function updateAIAlert() {
-  const critical = medicines.find(m => m.riskScore >= 8);
-  if (!critical) return;
-
-  document.querySelector(".alert strong").innerText =
-    "AI Alert: High Wastage Risk";
-
-  document.querySelector(".alert p").innerText =
-    generateAIMessage(critical);
-}
-
-/***********************
- * 🔔 EXPIRY ALERT DROPDOWN (≤ 7 DAYS)
- ***********************/
-function updateExpiryAlerts() {
-  const alertBox = document.getElementById("notificationBox");
-  const criticalMeds = medicines.filter(m => m.expiry <= 7);
-
-  alertBox.innerHTML = "<strong>Critical Expiry Alerts</strong>";
-
-  if (criticalMeds.length === 0) {
-    alertBox.innerHTML += "<p>No medicines expiring in 7 days</p>";
-    return;
-  }
-
-  criticalMeds.forEach(m => {
-    alertBox.innerHTML += `
-      <p>⚠ ${m.name} — expires in ${m.expiry} days</p>
-    `;
-  });
-}
-
-/***********************
- * 🔔 ALERT BUTTON HANDLER
- ***********************/
-function openNotifications() {
-  hideAllDropdowns();
-  updateExpiryAlerts();
-  document.getElementById("notificationBox").style.display = "block";
-}
-
-/***********************
- * ⚙️ SETTINGS BUTTON HANDLER
- ***********************/
-function openSettings() {
-  hideAllDropdowns();
-  document.getElementById("settingsBox").style.display = "block";
-}
-
-/***********************
- * PROFILE (UNCHANGED)
- ***********************/
-function openProfile() {
-  hideAllDropdowns();
-  document.getElementById("profileBox").style.display = "block";
-}
-
-/***********************
- * CLOSE DROPDOWNS
- ***********************/
-function hideAllDropdowns() {
-  ["notificationBox", "settingsBox", "profileBox"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = "none";
-  });
-}
-
-document.addEventListener("click", e => {
-  if (!e.target.closest(".nav-right")) hideAllDropdowns();
-});
-
-/***********************
- * EXPIRY PILL COLORS
- ***********************/
-function getExpiryLevel(days) {
-  if (days <= 7) return "critical";
-  if (days <= 30) return "warning";
-  if (days <= 60) return "notice";
-  return "safe";
-}
-
-/***********************
- * INITIAL LOAD
- ***********************/
-loadMedicinesFromFile();
+<script src="script.js"></script>
+</body>
+</html>
