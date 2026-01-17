@@ -12,7 +12,7 @@ async function loadMedicinesFromFile() {
     medicines = await response.json();
     refreshTable();
     updateAIAlert();
-    updateExpiryAlerts(); // initial expiry alert load
+    updateExpiryAlerts(); // initial load
   } catch (error) {
     console.error("Failed to load medicines file:", error);
   }
@@ -47,18 +47,11 @@ function loadTable() {
         ? `<span class="pill safe">Available</span>`
         : `<span class="pill critical">Reserved</span>`;
 
-    // Action button
-    let actionCell = row.insertCell(5);
-    let btn = document.createElement("button");
-    if (med.status === "Available") {
-      btn.innerText = "Request";
-      btn.classList.add("primary-btn");
-      btn.onclick = () => openModal(med);
-    } else {
-      btn.innerText = "Reserved";
-      btn.disabled = true;
-    }
-    actionCell.appendChild(btn);
+    // 🔥 Original working Request button
+    row.insertCell(5).innerHTML =
+      med.status === "Available"
+        ? `<a class="primary-btn" href="request.html?medicine=${encodeURIComponent(med.name)}">Request</a>`
+        : `<button disabled>Reserved</button>`;
 
     // AI Recommendation
     row.insertCell(6).innerText = generateAIMessage(med);
