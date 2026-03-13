@@ -19,14 +19,28 @@ function triggerUpload() {
 document.getElementById("fileInput").addEventListener("change", uploadInventory);
 
 function uploadInventory(e) {
-  const file = e.target.files[0];
-  if (!file) return;
 
-  // 🔹 ADDED (NON-DESTRUCTIVE): Excel file detection
-  if (file.name.endsWith(".xlsx")) {
-    uploadExcel(file);
-    return; // stop CSV flow
-  }
+ const file = e.target.files[0];
+ if (!file) return;
+
+ const fileName = file.name.toLowerCase();
+
+ // IMAGE → OCR
+ if (file.type.startsWith("image/")) {
+   processImage(file);
+   return;
+ }
+
+ // EXCEL
+ if (fileName.endsWith(".xlsx")) {
+   uploadExcel(file);
+   return;
+ }
+
+ // CSV
+ uploadCSV(file);
+
+}
 
   const reader = new FileReader();
   reader.onload = function (evt) {
@@ -191,6 +205,21 @@ function uploadExcel(file) {
   reader.readAsBinaryString(file);
 }
 
+async function processImage(file){
+
+ const result = await Tesseract.recognize(
+   file,
+   'eng'
+ );
+
+ const text = result.data.text;
+
+ console.log("OCR TEXT:", text);
+
+ convertToInventory(text);
+
+}
+
 /************************************
  * 🔹 ADD: STORE ALERTS
  ************************************/
@@ -223,43 +252,8 @@ function autoOrder(medicineName) {
   // - Quantity prediction
   // - Admin notification
 }
-async function extractInventory(){
 
-    const file = document.getElementById("imageInput").files[0];
 
-    if(!file){
-        alert("Upload an image first");
-        return;
-    }
-
-    const result = await Tesseract.recognize(
-        file,
-        'eng'
-    );
-
-    const text = result.data.text;
-
-    
-    console.log("OCR TEXT:", text);
-
-    document.getElementById("ocrResult").innerText = text;
-
-    convertToInventory(text);
-}
-function previewInventory(){
-
-    let html = "<h3>Extracted Medicines</h3>";
-
-    extractedInventory.forEach(med => {
-        html += `
-        <p>
-        ${med.medicine} | Qty: ${med.quantity} | Exp: ${med.expiry}
-        </p>`;
-    });
-
-    document.getElementById("previewArea").innerHTML = html;
-
-}
 function convertToInventory(text){
 
     const lines = text.split("\n");
@@ -304,5 +298,40 @@ function saveInventory(){
  syncToGlobalInventory();
 
  alert("Inventory saved successfully!");
+
+}
+function uploadCSV(file){
+
+ const reader = new FileReader();
+
+ reader.onload = function(evt){
+
+  const rows = evt.target.result.split("\n");
+
+  inventory = [];
+
+  for (let i = 1; i < rows.length; i++) {
+
+   const c = rows[i].split(",");
+
+   if (c.length < 4) continue;
+
+   inventory.push({
+    medicine: c[0].trim(),
+    quantity: parseInt(c[1]),
+    expiry: parseInt(c[2]),
+    temp: c[3].trim()
+   });
+
+  }
+
+  localStorage.setItem("storeInventory", JSON.stringify(inventory));
+
+  renderInventory();
+  syncToGlobalInventory();
+
+ };
+
+ reader.readAsText(file);
 
 }
