@@ -15,9 +15,11 @@ let extractedInventory = [];
 function triggerUpload() {
   document.getElementById("fileInput").click();
 }
-document.getElementById("fileInput").addEventListener("change", uploadInventory);
 
-document.getElementById("fileInput").addEventListener("change", uploadInventory);
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("fileInput").addEventListener("change", uploadInventory);
+});
 
 function uploadInventory(e) {
 
@@ -48,32 +50,7 @@ function uploadInventory(e) {
 
  alert("Unsupported file type");
 }
-  const reader = new FileReader();
-  reader.onload = function (evt) {
-    const rows = evt.target.result.split("\n");
-    inventory = [];
-
-    for (let i = 1; i < rows.length; i++) {
-      const c = rows[i].split(",");
-      if (c.length < 4) continue;
-
-      inventory.push({
-        medicine: c[0].trim(),
-        quantity: parseInt(c[1]),
-        expiry: parseInt(c[2]),
-        temp: c[3].trim()
-      });
-    }
-
-    localStorage.setItem("storeInventory", JSON.stringify(inventory));
-
-    renderInventory();
-    syncToGlobalInventory();
-  };
-
-  reader.readAsText(file);
-console.log("File uploaded:", file.name);
-}
+  
 
 /************************************
  * RENDER INVENTORY
