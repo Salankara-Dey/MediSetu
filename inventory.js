@@ -191,16 +191,15 @@ function uploadExcel(file) {
 
 async function processImage(file){
 
- const result = await Tesseract.recognize(
-   file,
-   'eng'
- );
+ const result = await Tesseract.recognize(file,'eng');
 
  const text = result.data.text;
 
  console.log("OCR TEXT:", text);
 
  convertToInventory(text);
+
+ saveInventory(); // add this line
 
 }
 
@@ -240,27 +239,25 @@ function autoOrder(medicineName) {
 
 function convertToInventory(text){
 
-    const lines = text.split("\n");
+ const lines = text.split("\n");
+ extractedInventory = [];
 
-    extractedInventory = [];
+ lines.forEach(line => {
 
-    lines.forEach(line => {
+  const cleaned = line.trim().replace(/\s+/g," ");
+  const parts = cleaned.split(" ");
 
-        const parts = line.trim().split(" ");
+  if(parts.length >= 2){
 
-        if(parts.length >= 3){
+   extractedInventory.push({
+    medicine: parts[0],
+    quantity: parseInt(parts[1]) || 1,
+    expiry: 30
+   });
 
-            extractedInventory.push({
-                medicine: parts[0],
-                quantity: parts[1],
-                expiry: parts[2]
-            });
+  }
 
-        }
-
-    });
-
-    previewInventory();
+ });
 
 }
 function saveInventory(){
