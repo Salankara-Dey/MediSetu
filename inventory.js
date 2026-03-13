@@ -13,9 +13,9 @@ let extractedInventory = [];
  * UPLOAD HANDLING
  ************************************/
 function triggerUpload() {
-  document.getElementById("fileInput").click();
+ console.log("Upload box clicked");
+ document.getElementById("fileInput").click();
 }
-
 document.getElementById("fileInput").addEventListener("change", uploadInventory);
 
 function uploadInventory(e) {
