@@ -221,3 +221,5 @@ function autoOrder(medicineName) {
   // - Quantity prediction
   // - Admin notification
 }
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="inventory.js"></script>
