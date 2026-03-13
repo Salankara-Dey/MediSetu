@@ -207,20 +207,27 @@ async function processImage(file){
     const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
     const data = imageData.data;
 
-    // Convert to grayscale + increase contrast
     for(let i=0;i<data.length;i+=4){
-      const avg = (data[i] + data[i+1] + data[i+2]) / 3;
 
-      const enhanced = avg > 140 ? 255 : 0;
+      const gray = 0.3*data[i] + 0.59*data[i+1] + 0.11*data[i+2];
 
-      data[i] = enhanced;
-      data[i+1] = enhanced;
-      data[i+2] = enhanced;
+      const value = gray > 150 ? 255 : 0;
+
+      data[i] = value;
+      data[i+1] = value;
+      data[i+2] = value;
     }
 
     ctx.putImageData(imageData,0,0);
 
-    const result = await Tesseract.recognize(canvas,'eng');
+   const result = await Tesseract.recognize(
+  canvas,
+  "eng",
+  {
+    tessedit_pageseg_mode: 6,
+    tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  }
+);
 
     const text = result.data.text;
 
@@ -230,7 +237,6 @@ async function processImage(file){
     saveInventory();
   }
 }
-
 /************************************
  * 🔹 ADD: STORE ALERTS
  ************************************/
@@ -273,23 +279,24 @@ function convertToInventory(text){
   lines.forEach(line => {
 
     const cleaned = line.trim().replace(/\s+/g," ");
-    const parts = cleaned.split(" ");
 
-    if(parts.length >= 3){
+    const match = cleaned.match(/([A-Za-z]+)\s*(\d+)\s*(\d+)/);
+
+    if(match){
 
       extractedInventory.push({
-        medicine: parts[0],
-        quantity: parseInt(parts[1]) || 1,
-        expiry: parseInt(parts[2]) || 30
+        medicine: match[1],
+        quantity: parseInt(match[2]),
+        expiry: parseInt(match[3])
       });
 
     }
 
   });
 
-  console.log("Extracted Inventory:", extractedInventory);
-}
+  console.log("Extracted:", extractedInventory);
 
+}
 
 function saveInventory(){
 
