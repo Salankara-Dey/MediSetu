@@ -191,16 +191,44 @@ function uploadExcel(file) {
 
 async function processImage(file){
 
- const result = await Tesseract.recognize(file,'eng');
+  const img = new Image();
+  img.src = URL.createObjectURL(file);
 
- const text = result.data.text;
+  img.onload = async function(){
 
- console.log("OCR TEXT:", text);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
- convertToInventory(text);
+    canvas.width = img.width;
+    canvas.height = img.height;
 
- saveInventory(); // add this line
+    ctx.drawImage(img,0,0);
 
+    const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+    const data = imageData.data;
+
+    // Convert to grayscale + increase contrast
+    for(let i=0;i<data.length;i+=4){
+      const avg = (data[i] + data[i+1] + data[i+2]) / 3;
+
+      const enhanced = avg > 140 ? 255 : 0;
+
+      data[i] = enhanced;
+      data[i+1] = enhanced;
+      data[i+2] = enhanced;
+    }
+
+    ctx.putImageData(imageData,0,0);
+
+    const result = await Tesseract.recognize(canvas,'eng');
+
+    const text = result.data.text;
+
+    console.log("OCR TEXT:", text);
+
+    convertToInventory(text);
+    saveInventory();
+  }
 }
 
 /************************************
@@ -239,27 +267,30 @@ function autoOrder(medicineName) {
 
 function convertToInventory(text){
 
- const lines = text.split("\n");
- extractedInventory = [];
+  const lines = text.split("\n");
+  extractedInventory = [];
 
- lines.forEach(line => {
+  lines.forEach(line => {
 
-  const cleaned = line.trim().replace(/\s+/g," ");
-  const parts = cleaned.split(" ");
+    const cleaned = line.trim().replace(/\s+/g," ");
+    const parts = cleaned.split(" ");
 
-  if(parts.length >= 2){
+    if(parts.length >= 3){
 
-   extractedInventory.push({
-    medicine: parts[0],
-    quantity: parseInt(parts[1]) || 1,
-    expiry: 30
-   });
+      extractedInventory.push({
+        medicine: parts[0],
+        quantity: parseInt(parts[1]) || 1,
+        expiry: parseInt(parts[2]) || 30
+      });
 
-  }
+    }
 
- });
+  });
 
+  console.log("Extracted Inventory:", extractedInventory);
 }
+
+
 function saveInventory(){
 
  extractedInventory.forEach(med => {
