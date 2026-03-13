@@ -8,7 +8,7 @@ if (localStorage.getItem("role") !== "store") {
 }
 
 let inventory = [];
-
+let extractedInventory = [];
 /************************************
  * UPLOAD HANDLING
  ************************************/
@@ -245,11 +245,25 @@ async function extractInventory(){
 
     convertToInventory(text);
 }
+function previewInventory(){
+
+    let html = "<h3>Extracted Medicines</h3>";
+
+    extractedInventory.forEach(med => {
+        html += `
+        <p>
+        ${med.medicine} | Qty: ${med.quantity} | Exp: ${med.expiry}
+        </p>`;
+    });
+
+    document.getElementById("previewArea").innerHTML = html;
+
+}
 function convertToInventory(text){
 
     const lines = text.split("\n");
 
-    let inventory = [];
+    extractedInventory = [];
 
     lines.forEach(line => {
 
@@ -257,7 +271,7 @@ function convertToInventory(text){
 
         if(parts.length >= 3){
 
-            inventory.push({
+            extractedInventory.push({
                 medicine: parts[0],
                 quantity: parts[1],
                 expiry: parts[2]
@@ -267,10 +281,16 @@ function convertToInventory(text){
 
     });
 
-    console.log("Inventory:", inventory);
+    previewInventory();
 
-    localStorage.setItem("inventories", JSON.stringify(inventory));
+}
+function saveInventory(){
 
-    alert("Inventory saved from image!");
+    localStorage.setItem(
+        "inventories",
+        JSON.stringify(extractedInventory)
+    );
+
+    alert("Inventory saved successfully!");
 
 }
