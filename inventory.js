@@ -17,12 +17,16 @@ function triggerUpload() {
 }
 document.getElementById("fileInput").addEventListener("change", uploadInventory);
 
+document.getElementById("fileInput").addEventListener("change", uploadInventory);
+
 function uploadInventory(e) {
 
  const file = e.target.files[0];
  if (!file) return;
 
  const fileName = file.name.toLowerCase();
+
+ console.log("File uploaded:", file.name);
 
  // IMAGE → OCR
  if (file.type.startsWith("image/")) {
@@ -37,10 +41,13 @@ function uploadInventory(e) {
  }
 
  // CSV
- uploadCSV(file);
+ if (fileName.endsWith(".csv")) {
+   uploadCSV(file);
+   return;
+ }
 
+ alert("Unsupported file type");
 }
-
   const reader = new FileReader();
   reader.onload = function (evt) {
     const rows = evt.target.result.split("\n");
