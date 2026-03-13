@@ -239,7 +239,8 @@ async function extractInventory(){
 
     const text = result.data.text;
 
-    console.log(text);
+    
+    console.log("OCR TEXT:", text);
 
     document.getElementById("ocrResult").innerText = text;
 
@@ -286,11 +287,22 @@ function convertToInventory(text){
 }
 function saveInventory(){
 
-    localStorage.setItem(
-        "inventories",
-        JSON.stringify(extractedInventory)
-    );
+ extractedInventory.forEach(med => {
 
-    alert("Inventory saved successfully!");
+  inventory.push({
+    medicine: med.medicine,
+    quantity: parseInt(med.quantity) || 0,
+    expiry: parseInt(med.expiry) || 30,
+    temp: "Normal"
+  });
+
+ });
+
+ localStorage.setItem("storeInventory", JSON.stringify(inventory));
+
+ renderInventory();
+ syncToGlobalInventory();
+
+ alert("Inventory saved successfully!");
 
 }
