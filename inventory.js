@@ -223,3 +223,54 @@ function autoOrder(medicineName) {
   // - Quantity prediction
   // - Admin notification
 }
+async function extractInventory(){
+
+    const file = document.getElementById("imageInput").files[0];
+
+    if(!file){
+        alert("Upload an image first");
+        return;
+    }
+
+    const result = await Tesseract.recognize(
+        file,
+        'eng'
+    );
+
+    const text = result.data.text;
+
+    console.log(text);
+
+    document.getElementById("ocrResult").innerText = text;
+
+    convertToInventory(text);
+}
+function convertToInventory(text){
+
+    const lines = text.split("\n");
+
+    let inventory = [];
+
+    lines.forEach(line => {
+
+        const parts = line.trim().split(" ");
+
+        if(parts.length >= 3){
+
+            inventory.push({
+                medicine: parts[0],
+                quantity: parts[1],
+                expiry: parts[2]
+            });
+
+        }
+
+    });
+
+    console.log("Inventory:", inventory);
+
+    localStorage.setItem("inventories", JSON.stringify(inventory));
+
+    alert("Inventory saved from image!");
+
+}
