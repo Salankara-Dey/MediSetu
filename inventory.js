@@ -13,8 +13,7 @@ let extractedInventory = [];
  * UPLOAD HANDLING
  ************************************/
 function triggerUpload() {
- console.log("Upload box clicked");
- document.getElementById("fileInput").click();
+  document.getElementById("fileInput").click();
 }
 document.getElementById("fileInput").addEventListener("change", uploadInventory);
 
@@ -66,6 +65,7 @@ function uploadInventory(e) {
   };
 
   reader.readAsText(file);
+console.log("File uploaded:", file.name);
 }
 
 /************************************
