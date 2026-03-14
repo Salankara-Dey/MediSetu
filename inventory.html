@@ -164,30 +164,32 @@ button.secondary {
 </div>
 </div>
 
-<!-- Upload -->
 <div class="card">
 
-<div class="upload-actions">
+  <div class="upload-actions">
 
-<div class="upload-box" id="uploadBox">
-<strong>⬆ Upload Inventory File</strong>
-<p>Upload CSV, Excel, or Image</p>
-</div>
+    <!-- Upload Box -->
+    <label for="fileInput" class="upload-box">
+      <strong>⬆ Upload Inventory File</strong>
+      <p>Upload CSV, Excel, or Image</p>
+    </label>
 
-<button class="camera-btn" id="cameraBtn">
-📷 Scan Medicine List
-</button>
+    <!-- Camera Button -->
+    <label for="cameraInput" class="camera-btn">
+      📷 Scan Medicine List
+    </label>
 
-</div>
+  </div>
 
-<input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
+  <!-- Hidden Inputs -->
+  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
 
-<input
-type="file"
-id="cameraInput"
-accept="image/*"
-capture="environment"
-style="display:none">
+  <input
+    type="file"
+    id="cameraInput"
+    accept="image/*"
+    capture="environment"
+    style="display:none">
 
 </div>
 
