@@ -13,6 +13,7 @@ let extractedInventory = [];
  * UPLOAD HANDLING
  ************************************/
 function triggerUpload(){
+  console.log("Upload clicked");
   const input = document.getElementById("fileInput");
   if(input){
     input.click();
@@ -20,14 +21,12 @@ function triggerUpload(){
 }
 
 function triggerCamera(){
+  console.log("Camera clicked");
   const camera = document.getElementById("cameraInput");
   if(camera){
     camera.click();
   }
 }
-
-
-
 function uploadInventory(e) {
 
  const file = e.target.files[0];
@@ -287,7 +286,7 @@ function convertToInventory(text){
 
     const cleaned = line.trim().replace(/\s+/g," ");
 
-    const match = cleaned.match(/([A-Za-z]+)\s*(\d+)\s*(\d+)/);
+    const match = cleaned.match(/([A-Za-z0-9]+)\s*(\d+)\s*(\d+)/);
 
    if(match){
 
