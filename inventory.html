@@ -148,6 +148,52 @@ button.secondary {
 .camera-btn:hover{
   background:#1e4d59;
 }
+.upload-card{
+  padding:0;
+}
+
+.upload-box{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:2px dashed var(--border);
+  border-radius:14px;
+  padding:22px 24px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.upload-box:hover{
+  background:rgba(255,255,255,0.4);
+}
+
+.upload-left{
+  display:flex;
+  gap:14px;
+  align-items:center;
+}
+
+.upload-icon{
+  font-size:24px;
+}
+
+.upload-right{
+  display:flex;
+  align-items:center;
+}
+
+.camera-icon{
+  background:var(--dark);
+  color:white;
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:16px;
+}
+
+.camera-icon:hover{
+  background:#1e4d59;
+}
 </style>
 </head>
 
@@ -166,32 +212,35 @@ button.secondary {
   </div>
 
   <!-- Upload -->
- <div class="card">
+ <div class="card upload-card">
 
-  <div class="upload-actions">
+  <div class="upload-box" onclick="triggerUpload()">
 
-    <!-- Upload File -->
-    <div class="upload-box" onclick="triggerUpload()">
-      <strong>⬆ Upload Inventory File</strong>
-      <p>Upload CSV, Excel, or Image</p>
-    </div>
+      <div class="upload-left">
+        <span class="upload-icon">⬆</span>
 
-    <!-- Camera Button -->
-    <button class="camera-btn" onclick="triggerCamera()">
-      📷 Scan Medicine List
-    </button>
+        <div>
+          <strong>Upload Inventory</strong>
+          <p>CSV, Excel, or Image</p>
+        </div>
+      </div>
+
+      <div class="upload-right">
+        <button class="camera-icon" onclick="event.stopPropagation(); triggerCamera()">
+          📷
+        </button>
+      </div>
 
   </div>
 
-  <!-- Normal Upload -->
   <input type="file" id="fileInput" accept=".csv,.xlsx,image/*">
 
-  <!-- Camera Capture -->
-  <input type="file"
-         id="cameraInput"
-         accept="image/*"
-         capture="environment"
-         style="display:none">
+  <input 
+    type="file"
+    id="cameraInput"
+    accept="image/*"
+    capture="environment"
+    style="display:none">
 
 </div>
 </div>
