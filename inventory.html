@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Medical Store Inventory | MediSetu</title>
-
 <style>
 :root {
   --bg: #E0FBFC;
@@ -12,34 +11,27 @@
   --dark: #253237;
   --muted: #5C6B73;
 }
-
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--dark);
 }
-
 .container {
   max-width: 1100px;
   margin: auto;
   padding: 24px;
 }
-
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .header h1 { margin: 0; }
-
 .actions button {
   margin-left: 8px;
 }
-
 .card {
   background: var(--card);
   padding: 20px;
@@ -47,77 +39,61 @@ body {
   margin-top: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
-
 .upload-box {
   border: 2px dashed var(--border);
   padding: 30px;
   text-align: center;
   border-radius: 14px;
   cursor: pointer;
+  flex: 1;
 }
-
 .upload-box:hover {
   background: rgba(255,255,255,0.4);
 }
-
-#fileInput {
-  display: none;
-}
-
 .kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 14px;
   margin-top: 20px;
 }
-
 .kpi {
   background: rgba(255,255,255,0.5);
   padding: 16px;
   border-radius: 14px;
 }
-
 .kpi h2 {
   margin: 0;
   font-size: 26px;
 }
-
 .kpi p {
   margin: 4px 0 0;
   font-size: 13px;
   color: var(--muted);
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 16px;
 }
-
 th, td {
   padding: 10px;
   font-size: 14px;
 }
-
 th {
   background: var(--border);
 }
-
 tr:nth-child(even) {
   background: rgba(255,255,255,0.45);
 }
-
 .badge {
   padding: 6px 10px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
 }
-
-.safe { background: #d4edda; color: #155724; }
-.warning { background: #fff3cd; color: #856404; }
+.safe     { background: #d4edda; color: #155724; }
+.warning  { background: #fff3cd; color: #856404; }
 .critical { background: #f8d7da; color: #721c24; }
-
 button {
   padding: 8px 12px;
   border-radius: 8px;
@@ -126,131 +102,115 @@ button {
   background: var(--dark);
   color: white;
 }
-
 button.secondary {
   background: var(--muted);
 }
-
-.upload-actions{
-  display:flex;
-  gap:15px;
-  align-items:center;
+.upload-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
 }
-
-.camera-btn{
-  background:#2b6777;
-  color:white;
-  padding:12px 18px;
-  border-radius:10px;
-  font-size:15px;
+.camera-btn {
+  background: #2b6777;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  white-space: nowrap;
 }
-
-.camera-btn:hover{
-  background:#1e4d59;
+.camera-btn:hover {
+  background: #1e4d59;
 }
 </style>
 </head>
-
 <body>
-
 <div class="container">
 
-<div class="header">
-<h1>🏪 Store Inventory Management</h1>
-
-<div class="actions">
-<button onclick="goToDashboard()">📊 Dashboard</button>
-<button class="secondary" onclick="exitToHome()">🚪 Exit</button>
-</div>
-</div>
-
-<div class="card">
-
-  <div class="upload-actions">
-
-    <!-- Upload Box -->
-    <label for="fileInput" class="upload-box">
-      <strong>⬆ Upload Inventory File</strong>
-      <p>Upload CSV, Excel, or Image</p>
-    </label>
-
-    <!-- Camera Button -->
-    <label for="cameraInput" class="camera-btn">
-      📷 Scan Medicine List
-    </label>
-
+  <div class="header">
+    <h1>🏪 Store Inventory Management</h1>
+    <div class="actions">
+      <button onclick="goToDashboard()">📊 Dashboard</button>
+      <button class="secondary" onclick="exitToHome()">🚪 Exit</button>
+    </div>
   </div>
 
-  <!-- Hidden Inputs -->
-  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
+  <div class="card">
+    <div class="upload-actions">
 
-  <input
-    type="file"
-    id="cameraInput"
-    accept="image/*"
-    capture="environment"
-    style="display:none">
+      <!-- FIX 1 & 2: label now has id="uploadBox" so JS can find it,
+           and for="fileInput" correctly opens the hidden file input -->
+      <label for="fileInput" id="uploadBox" class="upload-box">
+        <strong>⬆ Upload Inventory File</strong>
+        <p>Upload CSV, Excel, or Image</p>
+      </label>
 
-</div>
+      <!-- FIX 3: label now has id="cameraBtn" so JS can find it -->
+      <label for="cameraInput" id="cameraBtn" class="camera-btn">
+        📷 Scan Medicine List
+      </label>
 
-<h3>📊 OCR Scan Preview</h3>
+    </div>
 
-<table>
-<thead>
-<tr>
-<th>Medicine</th>
-<th>Quantity</th>
-<th>Expiry</th>
-</tr>
-</thead>
+    <!-- Hidden file inputs -->
+    <input type="file" id="fileInput"   accept=".csv,.xlsx,image/*" style="display:none">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none">
+  </div>
 
-<tbody id="ocrPreviewTable"></tbody>
-</table>
+  <!-- FIX 4: ocrPreviewCard div was completely missing — JS does
+       document.getElementById("ocrPreviewCard").style.display = "block"
+       which would crash without this element -->
+  <div id="ocrPreviewCard" class="card" style="display:none; margin-top:20px;">
+    <h3>📊 OCR Scan Preview</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Quantity</th>
+          <th>Expiry (days)</th>
+        </tr>
+      </thead>
+      <tbody id="ocrPreviewTable"></tbody>
+    </table>
+    <button onclick="saveInventory()" style="margin-top:12px;">Save Inventory</button>
+  </div>
 
-<button onclick="saveInventory()">Save Inventory</button>
+  <div class="kpis">
+    <div class="kpi">
+      <h2 id="totalItems">0</h2>
+      <p>Total Items</p>
+    </div>
+    <div class="kpi">
+      <h2 id="criticalCount">0</h2>
+      <p>Critical Risk</p>
+    </div>
+    <div class="kpi">
+      <h2 id="expiringSoon">0</h2>
+      <p>Expiring Soon</p>
+    </div>
+  </div>
 
-<div class="kpis">
-<div class="kpi">
-<h2 id="totalItems">0</h2>
-<p>Total Items</p>
-</div>
-
-<div class="kpi">
-<h2 id="criticalCount">0</h2>
-<p>Critical Risk</p>
-</div>
-
-<div class="kpi">
-<h2 id="expiringSoon">0</h2>
-<p>Expiring Soon</p>
-</div>
-</div>
-
-<div class="card">
-<h3>📦 Uploaded Inventory</h3>
-
-<table>
-<thead>
-<tr>
-<th>Medicine</th>
-<th>Quantity</th>
-<th>Expiry (days)</th>
-<th>Temperature</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="inventoryTable"></tbody>
-</table>
-
-</div>
+  <div class="card">
+    <h3>📦 Uploaded Inventory</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Quantity</th>
+          <th>Expiry (days)</th>
+          <th>Temperature</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryTable"></tbody>
+    </table>
+  </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="inventory.js"></script>
-
 </body>
 </html>
