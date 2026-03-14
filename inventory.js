@@ -1,5 +1,3 @@
-
-
 /************************************
  * STORE PAGE PROTECTION
  ************************************/
@@ -9,88 +7,82 @@ if (localStorage.getItem("role") !== "store") {
 
 let inventory = [];
 let extractedInventory = [];
+
+/************************************
+ * LOAD EXISTING INVENTORY
+ ************************************/
+const saved = JSON.parse(localStorage.getItem("storeInventory"));
+if (saved) {
+  inventory = saved;
+  renderInventory();
+}
+
 /************************************
  * UPLOAD HANDLING
  ************************************/
-function triggerCamera(){
+function triggerCamera() {
   document.getElementById("cameraInput").click();
 }
-function triggerUpload(){
+function triggerUpload() {
   document.getElementById("fileInput").click();
 }
+
+// FIX: Single, clean DOMContentLoaded block (was duplicated / broken before)
 window.addEventListener("DOMContentLoaded", () => {
 
-  const fileInput = document.getElementById("fileInput");
+  const fileInput   = document.getElementById("fileInput");
   const cameraInput = document.getElementById("cameraInput");
+  const uploadBox   = document.getElementById("uploadBox");
+  const cameraBtn   = document.getElementById("cameraBtn");
 
-  const uploadBox = document.getElementById("uploadBox");
-  const cameraBtn = document.getElementById("cameraBtn");
-
-  if(uploadBox){
+  if (uploadBox) {
     uploadBox.addEventListener("click", triggerUpload);
   }
 
-  if(cameraBtn){
+  if (cameraBtn) {
     cameraBtn.addEventListener("click", triggerCamera);
   }
 
-  if(fileInput){
+  if (fileInput) {
     fileInput.addEventListener("change", uploadInventory);
   }
 
-  if(cameraInput){
-    cameraInput.addEventListener("change", (e)=>{
-
+  if (cameraInput) {
+    cameraInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
-      if(!file) return;
-
+      if (!file) return;
       console.log("Camera photo captured:", file.name);
-
       processImage(file);
-
     });
   }
 
-});
-  }
+}); // ← only ONE closing brace for DOMContentLoaded
 
-  // 🔹 ADD THIS BLOCK
-  if(uploadBox){
-    uploadBox.addEventListener("click", triggerUpload);
-  }
-
-});
-
+/************************************
+ * UPLOAD DISPATCHER
+ ************************************/
 function uploadInventory(e) {
+  const file = e.target.files[0];
+  if (!file) return;
 
- const file = e.target.files[0];
- if (!file) return;
+  const fileName = file.name.toLowerCase();
+  console.log("File uploaded:", file.name);
 
- const fileName = file.name.toLowerCase();
+  if (file.type.startsWith("image/")) {
+    processImage(file);
+    return;
+  }
+  if (fileName.endsWith(".xlsx")) {
+    uploadExcel(file);
+    return;
+  }
+  if (fileName.endsWith(".csv")) {
+    uploadCSV(file);
+    return;
+  }
 
- console.log("File uploaded:", file.name);
-
- // IMAGE → OCR
- if (file.type.startsWith("image/")) {
-   processImage(file);
-   return;
- }
-
- // EXCEL
- if (fileName.endsWith(".xlsx")) {
-   uploadExcel(file);
-   return;
- }
-
- // CSV
- if (fileName.endsWith(".csv")) {
-   uploadCSV(file);
-   return;
- }
-
- alert("Unsupported file type");
+  alert("Unsupported file type");
 }
-  
 
 /************************************
  * RENDER INVENTORY
@@ -113,10 +105,7 @@ function renderInventory() {
       expiring++;
     }
 
-    // 🔹 STEP 2: AUTO-REORDER CHECK (ADDED)
     const needsReorder = checkAutoReorder(item);
-
-    // 🔹 EXISTING ALERT SYSTEM (UNCHANGED)
     checkAlerts(item);
 
     table.innerHTML += `
@@ -127,19 +116,18 @@ function renderInventory() {
         <td>${item.temp}</td>
         <td><span class="badge ${status}">${status.toUpperCase()}</span></td>
         <td>
-          ${
-            needsReorder
-              ? `<button onclick="autoOrder('${item.medicine}')">Auto Order</button>`
-              : "—"
+          ${needsReorder
+            ? `<button onclick="autoOrder('${item.medicine}')">Auto Order</button>`
+            : "—"
           }
         </td>
       </tr>
     `;
   });
 
-  document.getElementById("totalItems").innerText = inventory.length;
+  document.getElementById("totalItems").innerText   = inventory.length;
   document.getElementById("criticalCount").innerText = critical;
-  document.getElementById("expiringSoon").innerText = expiring;
+  document.getElementById("expiringSoon").innerText  = expiring;
 }
 
 /************************************
@@ -155,20 +143,10 @@ function goToDashboard() {
 }
 
 /************************************
- * LOAD EXISTING INVENTORY
- ************************************/
-const saved = JSON.parse(localStorage.getItem("storeInventory"));
-if (saved) {
-  inventory = saved;
-  renderInventory();
-}
-
-/************************************
- * 🔹 ADD: SAVE TO GLOBAL INVENTORY
+ * SYNC TO GLOBAL INVENTORY
  ************************************/
 function syncToGlobalInventory() {
-  const global =
-    JSON.parse(localStorage.getItem("storeInventories")) || [];
+  const global = JSON.parse(localStorage.getItem("storeInventories")) || [];
 
   inventory.forEach(item => {
     global.push({
@@ -178,7 +156,7 @@ function syncToGlobalInventory() {
       quantity: item.quantity,
       expiryDays: item.expiry,
       temperatureRisk: item.temp,
-      approved: false   // 🔴 Admin must approve
+      approved: false
     });
   });
 
@@ -186,99 +164,83 @@ function syncToGlobalInventory() {
 }
 
 /************************************
- * 🔹 ADD: ADMIN APPROVAL TOGGLE
- * (kept intentionally, even if unused)
+ * ADMIN APPROVAL TOGGLE
  ************************************/
 function toggleApprovalById(id) {
-  const all =
-    JSON.parse(localStorage.getItem("storeInventories")) || [];
-
+  const all = JSON.parse(localStorage.getItem("storeInventories")) || [];
   const item = all.find(i => i.id === id);
   if (!item) return;
 
   item.approved = !item.approved;
-
   localStorage.setItem("storeInventories", JSON.stringify(all));
   alert(`Inventory ${item.approved ? "APPROVED" : "UNAPPROVED"}`);
 }
 
 /************************************
- * 🔹 ADD: EXCEL UPLOAD SUPPORT
+ * EXCEL UPLOAD
  ************************************/
 function uploadExcel(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
-    const wb = XLSX.read(e.target.result, { type: "binary" });
+    const wb    = XLSX.read(e.target.result, { type: "binary" });
     const sheet = wb.Sheets[wb.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet);
+    const rows  = XLSX.utils.sheet_to_json(sheet);
 
     rows.forEach(r => {
       inventory.push({
         medicine: r.Medicine,
         quantity: r.Quantity,
-        expiry: r.ExpiryDays,
-        temp: r.Temperature
+        expiry:   r.ExpiryDays,
+        temp:     r.Temperature
       });
     });
 
     localStorage.setItem("storeInventory", JSON.stringify(inventory));
-
     renderInventory();
     syncToGlobalInventory();
   };
   reader.readAsBinaryString(file);
 }
 
-async function processImage(file){
-
-  const img = new Image();
-  img.src = URL.createObjectURL(file);
-
-  img.onload = async function(){
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    ctx.drawImage(img,0,0);
-
-    const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
-    const data = imageData.data;
-
-    for(let i=0;i<data.length;i+=4){
-
-      const gray = 0.3*data[i] + 0.59*data[i+1] + 0.11*data[i+2];
-
-      const value = gray > 150 ? 255 : 0;
-
-      data[i] = value;
-      data[i+1] = value;
-      data[i+2] = value;
-    }
-
-    ctx.putImageData(imageData,0,0);
-
-   const result = await Tesseract.recognize(
-  canvas,
-  "eng",
-  {
-    tessedit_pageseg_mode: 6,
-    tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  }
-);
-
-    const text = result.data.text;
-
-    console.log("OCR TEXT:", text);
-
-    convertToInventory(text);
-    saveInventory();
-  }
-}
 /************************************
- * 🔹 ADD: STORE ALERTS
+ * IMAGE → OCR
+ ************************************/
+async function processImage(file) {
+  const img   = new Image();
+  img.src     = URL.createObjectURL(file);
+
+  img.onload = async function () {
+    const canvas = document.createElement("canvas");
+    const ctx    = canvas.getContext("2d");
+
+    canvas.width  = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+
+    // Binarise for better OCR
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data      = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const gray  = 0.3 * data[i] + 0.59 * data[i + 1] + 0.11 * data[i + 2];
+      const value = gray > 150 ? 255 : 0;
+      data[i] = data[i + 1] = data[i + 2] = value;
+    }
+    ctx.putImageData(imageData, 0, 0);
+
+    const result = await Tesseract.recognize(canvas, "eng", {
+      tessedit_pageseg_mode: 6,
+      tessedit_char_whitelist:
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    });
+
+    console.log("OCR TEXT:", result.data.text);
+    convertToInventory(result.data.text);
+  };
+}
+
+/************************************
+ * ALERTS
  ************************************/
 function checkAlerts(item) {
   if (item.expiry <= 7 || item.temp === "Critical") {
@@ -287,139 +249,115 @@ function checkAlerts(item) {
 }
 
 /************************************
- * 🔹 STEP 2: AUTO RE-ORDER CHECK
+ * AUTO RE-ORDER CHECK
  ************************************/
 function checkAutoReorder(item) {
-  if (item.quantity <= 0 || item.expiry <= 0) {
-    return true;
-  }
-  return false;
+  return item.quantity <= 0 || item.expiry <= 0;
 }
 
 /************************************
- * 🔹 STEP 4: AUTO ORDER ACTION
+ * AUTO ORDER ACTION
  ************************************/
 function autoOrder(medicineName) {
   alert(
     `📦 AUTO ORDER PLACED\n\nMedicine: ${medicineName}\nSupplier notified.\nEstimated restock: 3 days.`
   );
-
-  // Future scope:
-  // - Supplier email
-  // - Quantity prediction
-  // - Admin notification
 }
 
-
-function convertToInventory(text){
-
-  const lines = text.split("\n");
+/************************************
+ * OCR → STRUCTURED DATA
+ * FIX: removed the extra }); that was closing forEach early
+ ************************************/
+function convertToInventory(text) {
+  const lines      = text.split("\n");
   extractedInventory = [];
 
   lines.forEach(line => {
+    const cleaned = line.trim().replace(/\s+/g, " ");
+    const match   = cleaned.match(/([A-Za-z0-9]+)\s*(\d+)\s*(\d+)/);
 
-    const cleaned = line.trim().replace(/\s+/g," ");
+    if (match) {
+      const name = match[1];
+      if (name.length < 3)        return;
+      if (!/[a-zA-Z]/.test(name)) return;
 
-    const match = cleaned.match(/([A-Za-z0-9]+)\s*(\d+)\s*(\d+)/);
-
-   if(match){
-
- const name = match[1];
-
- if(name.length < 3) return;   // ignore junk words
- if(!/[a-zA-Z]/.test(name)) return;
-
- extractedInventory.push({
-   medicine: name,
-   quantity: parseInt(match[2]),
-   expiry: parseInt(match[3])
- });
-
-}
-
+      extractedInventory.push({
+        medicine: name,
+        quantity: parseInt(match[2]),
+        expiry:   parseInt(match[3])
+      });
     }
-
-  });
+  }); // ← forEach ends here, convertToInventory ends below
 
   console.log("Extracted:", extractedInventory);
   previewInventory();
+} // ← convertToInventory ends here
 
-}
-
-function saveInventory(){
-
- extractedInventory.forEach(med => {
-
-  inventory.push({
-    medicine: med.medicine,
-    quantity: parseInt(med.quantity) || 0,
-    expiry: parseInt(med.expiry) || 30,
-    temp: "Normal"
+/************************************
+ * SAVE INVENTORY (from OCR preview)
+ ************************************/
+function saveInventory() {
+  extractedInventory.forEach(med => {
+    inventory.push({
+      medicine: med.medicine,
+      quantity: parseInt(med.quantity) || 0,
+      expiry:   parseInt(med.expiry)   || 30,
+      temp:     "Normal"
+    });
   });
 
- });
-
- localStorage.setItem("storeInventory", JSON.stringify(inventory));
-
- renderInventory();
- syncToGlobalInventory();
-
- alert("Inventory saved successfully!");
-
-}
-function uploadCSV(file){
-
- const reader = new FileReader();
-
- reader.onload = function(evt){
-
-  const rows = evt.target.result.split("\n");
-
-  inventory = [];
-
-  for (let i = 1; i < rows.length; i++) {
-
-   const c = rows[i].split(",");
-
-   if (c.length < 4) continue;
-
-   inventory.push({
-    medicine: c[0].trim(),
-    quantity: parseInt(c[1]),
-    expiry: parseInt(c[2]),
-    temp: c[3].trim()
-   });
-
-  }
-
   localStorage.setItem("storeInventory", JSON.stringify(inventory));
-
   renderInventory();
   syncToGlobalInventory();
-
- };
-
- reader.readAsText(file);
-
+  alert("Inventory saved successfully!");
 }
-function previewInventory(){
 
- const table = document.getElementById("ocrPreviewTable");
+/************************************
+ * CSV UPLOAD
+ ************************************/
+function uploadCSV(file) {
+  const reader = new FileReader();
 
- table.innerHTML = "";
+  reader.onload = function (evt) {
+    const rows = evt.target.result.split("\n");
+    inventory  = [];
 
- extractedInventory.forEach((item,i)=>{
+    for (let i = 1; i < rows.length; i++) {
+      const c = rows[i].split(",");
+      if (c.length < 4) continue;
 
-  table.innerHTML += `
-   <tr>
-    <td contenteditable="true">${item.medicine}</td>
-    <td contenteditable="true">${item.quantity}</td>
-    <td contenteditable="true">${item.expiry}</td>
-   </tr>
-  `;
+      inventory.push({
+        medicine: c[0].trim(),
+        quantity: parseInt(c[1]),
+        expiry:   parseInt(c[2]),
+        temp:     c[3].trim()
+      });
+    }
 
- });
+    localStorage.setItem("storeInventory", JSON.stringify(inventory));
+    renderInventory();
+    syncToGlobalInventory();
+  };
 
- document.getElementById("ocrPreviewCard").style.display="block";
+  reader.readAsText(file);
+}
 
+/************************************
+ * OCR PREVIEW TABLE
+ ************************************/
+function previewInventory() {
+  const table = document.getElementById("ocrPreviewTable");
+  table.innerHTML = "";
+
+  extractedInventory.forEach((item) => {
+    table.innerHTML += `
+      <tr>
+        <td contenteditable="true">${item.medicine}</td>
+        <td contenteditable="true">${item.quantity}</td>
+        <td contenteditable="true">${item.expiry}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("ocrPreviewCard").style.display = "block";
 }
