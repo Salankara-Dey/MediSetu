@@ -216,7 +216,7 @@ button.secondary {
   <div class="upload-actions">
 
     <!-- Upload File -->
-    <div class="upload-box" onclick="triggerUpload()">
+    <div class="upload-box" id="uploadBox">
       <strong>⬆ Upload Inventory File</strong>
       <p>Upload CSV, Excel, or Image</p>
     </div>
@@ -235,7 +235,7 @@ button.secondary {
   <input type="file"
          id="cameraInput"
          accept="image/*"
-         capture="environment"
+         capture
          style="display:none">
 
 </div>
