@@ -23,6 +23,17 @@ window.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.getElementById("fileInput");
   const cameraInput = document.getElementById("cameraInput");
 
+  const uploadBox = document.getElementById("uploadBox");
+  const cameraBtn = document.getElementById("cameraBtn");
+
+  if(uploadBox){
+    uploadBox.addEventListener("click", triggerUpload);
+  }
+
+  if(cameraBtn){
+    cameraBtn.addEventListener("click", triggerCamera);
+  }
+
   if(fileInput){
     fileInput.addEventListener("change", uploadInventory);
   }
@@ -38,6 +49,14 @@ window.addEventListener("DOMContentLoaded", () => {
       processImage(file);
 
     });
+  }
+
+});
+  }
+
+  // 🔹 ADD THIS BLOCK
+  if(uploadBox){
+    uploadBox.addEventListener("click", triggerUpload);
   }
 
 });
