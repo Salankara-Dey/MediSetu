@@ -212,11 +212,11 @@ button.secondary {
   </div>
 
   <!-- Upload -->
- <div class="card upload-card">
+ <<div class="card upload-card">
 
-  <div class="upload-box">
+  <div class="upload-box" onclick="triggerUpload()">
 
-      <div class="upload-left" onclick="triggerUpload()">
+      <div class="upload-left">
         <span class="upload-icon">⬆</span>
 
         <div>
@@ -226,7 +226,7 @@ button.secondary {
       </div>
 
       <div class="upload-right">
-        <button class="camera-icon" onclick="event.stopPropagation(); triggerCamera()">
+        <button type="button" class="camera-icon" onclick="event.stopPropagation(); triggerCamera();">
           📷
         </button>
       </div>
