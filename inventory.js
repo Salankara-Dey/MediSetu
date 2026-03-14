@@ -12,11 +12,18 @@ let extractedInventory = [];
 /************************************
  * UPLOAD HANDLING
  ************************************/
-function triggerCamera(){
-  document.getElementById("cameraInput").click();
+function triggerUpload(){
+  const input = document.getElementById("fileInput");
+  if(input){
+    input.click();
+  }
 }
-function triggerUpload() {
-  document.getElementById("fileInput").click();
+
+function triggerCamera(){
+  const camera = document.getElementById("cameraInput");
+  if(camera){
+    camera.click();
+  }
 }
 
 
@@ -394,3 +401,26 @@ function previewInventory(){
  document.getElementById("ocrPreviewCard").style.display="block";
 
 }
+window.addEventListener("DOMContentLoaded", () => {
+
+  const fileInput = document.getElementById("fileInput");
+  const cameraInput = document.getElementById("cameraInput");
+
+  if(fileInput){
+    fileInput.addEventListener("change", uploadInventory);
+  }
+
+  if(cameraInput){
+    cameraInput.addEventListener("change", (e)=>{
+
+      const file = e.target.files[0];
+      if(!file) return;
+
+      console.log("Camera photo captured:", file.name);
+
+      processImage(file);
+
+    });
+  }
+
+});
