@@ -211,13 +211,11 @@ button.secondary {
     </div>
   </div>
 
-  <!-- Upload -->
- <!-- Upload -->
-<div class="card">
+ <div class="card">
 
   <div class="upload-actions">
 
-    <!-- Upload Box -->
+    <!-- Upload File -->
     <div class="upload-box" onclick="triggerUpload()">
       <strong>⬆ Upload Inventory File</strong>
       <p>Upload CSV, Excel, or Image</p>
@@ -230,18 +228,17 @@ button.secondary {
 
   </div>
 
-  <!-- Hidden Inputs -->
-  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
+  <!-- Normal Upload -->
+  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*">
 
-  <input
-    type="file"
-    id="cameraInput"
-    accept="image/*"
-    capture="environment"
-    style="display:none">
+  <!-- Camera Capture -->
+  <input type="file"
+         id="cameraInput"
+         accept="image/*"
+         capture="environment"
+         style="display:none">
 
 </div>
-
 <h3>📊 OCR Scan Preview</h3>
 
 <table>
