@@ -27,18 +27,7 @@ function triggerCamera(){
 }
 
 
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("fileInput").addEventListener("change", uploadInventory);
-});
-document.getElementById("cameraInput")
-.addEventListener("change", function(e){
 
-  const file = e.target.files[0];
-  if(!file) return;
-
-  processImage(file);
-
-});
 function uploadInventory(e) {
 
  const file = e.target.files[0];
