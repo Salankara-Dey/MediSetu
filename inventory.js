@@ -293,19 +293,27 @@ function convertToInventory(text){
 
     const match = cleaned.match(/([A-Za-z]+)\s*(\d+)\s*(\d+)/);
 
-    if(match){
+   if(match){
 
-      extractedInventory.push({
-        medicine: match[1],
-        quantity: parseInt(match[2]),
-        expiry: parseInt(match[3])
-      });
+ const name = match[1];
+
+ if(name.length < 3) return;   // ignore junk words
+ if(!/[a-zA-Z]/.test(name)) return;
+
+ extractedInventory.push({
+   medicine: name,
+   quantity: parseInt(match[2]),
+   expiry: parseInt(match[3])
+ });
+
+}
 
     }
 
   });
 
   console.log("Extracted:", extractedInventory);
+  previewInventory();
 
 }
 
@@ -363,5 +371,26 @@ function uploadCSV(file){
  };
 
  reader.readAsText(file);
+
+}
+function previewInventory(){
+
+ const table = document.getElementById("ocrPreviewTable");
+
+ table.innerHTML = "";
+
+ extractedInventory.forEach((item,i)=>{
+
+  table.innerHTML += `
+   <tr>
+    <td contenteditable="true">${item.medicine}</td>
+    <td contenteditable="true">${item.quantity}</td>
+    <td contenteditable="true">${item.expiry}</td>
+   </tr>
+  `;
+
+ });
+
+ document.getElementById("ocrPreviewCard").style.display="block";
 
 }
