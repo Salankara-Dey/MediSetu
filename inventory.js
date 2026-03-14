@@ -13,19 +13,11 @@ let extractedInventory = [];
  * UPLOAD HANDLING
  ************************************/
 function triggerUpload(){
-  console.log("Upload clicked");
-  const input = document.getElementById("fileInput");
-  if(input){
-    input.click();
-  }
+  document.getElementById("fileInput").click();
 }
 
 function triggerCamera(){
-  console.log("Camera clicked");
-  const camera = document.getElementById("cameraInput");
-  if(camera){
-    camera.click();
-  }
+  document.getElementById("cameraInput").click();
 }
 function uploadInventory(e) {
 
