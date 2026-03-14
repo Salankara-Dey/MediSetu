@@ -133,6 +133,24 @@ button.secondary {
 </style>
 </head>
 
+.upload-actions{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+
+.camera-btn{
+  background:#2b6777;
+  color:white;
+  padding:12px 18px;
+  border-radius:10px;
+  font-size:15px;
+}
+
+.camera-btn:hover{
+  background:#1e4d59;
+}
+
 <body>
 
 <div class="container">
@@ -146,13 +164,34 @@ button.secondary {
   </div>
 
   <!-- Upload -->
-  <div class="card">
-    <input type="file" id="fileInput" accept=".csv,.xlsx,image/*">
-  <div class="upload-box" onclick="triggerUpload()">
-    <strong>⬆ Upload Inventory File</strong>
-    <p>Upload CSV, Excel, or Image of medicine list</p>
-    
+ <div class="card">
+
+  <div class="upload-actions">
+
+    <!-- Upload File -->
+    <div class="upload-box" onclick="triggerUpload()">
+      <strong>⬆ Upload Inventory File</strong>
+      <p>Upload CSV, Excel, or Image</p>
+    </div>
+
+    <!-- Camera Button -->
+    <button class="camera-btn" onclick="triggerCamera()">
+      📷 Scan Medicine List
+    </button>
+
   </div>
+
+  <!-- Normal Upload -->
+  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*">
+
+  <!-- Camera Capture -->
+  <input type="file"
+         id="cameraInput"
+         accept="image/*"
+         capture="environment"
+         style="display:none">
+
+</div>
 </div>
   
   <!-- KPIs -->
