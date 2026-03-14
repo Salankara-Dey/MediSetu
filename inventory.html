@@ -212,30 +212,28 @@ button.secondary {
   </div>
 
   <!-- Upload -->
- <<div class="card upload-card">
+ <!-- Upload -->
+<div class="card">
 
-  <div class="upload-box" onclick="triggerUpload()">
+  <div class="upload-actions">
 
-      <div class="upload-left">
-        <span class="upload-icon">⬆</span>
+    <!-- Upload Box -->
+    <div class="upload-box" onclick="triggerUpload()">
+      <strong>⬆ Upload Inventory File</strong>
+      <p>Upload CSV, Excel, or Image</p>
+    </div>
 
-        <div>
-          <strong>Upload Inventory</strong>
-          <p>CSV, Excel, or Image</p>
-        </div>
-      </div>
-
-      <div class="upload-right">
-        <button type="button" class="camera-icon" onclick="event.stopPropagation(); triggerCamera();">
-          📷
-        </button>
-      </div>
+    <!-- Camera Button -->
+    <button class="camera-btn" onclick="triggerCamera()">
+      📷 Scan Medicine List
+    </button>
 
   </div>
 
+  <!-- Hidden Inputs -->
   <input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
 
-  <input 
+  <input
     type="file"
     id="cameraInput"
     accept="image/*"
@@ -243,8 +241,6 @@ button.secondary {
     style="display:none">
 
 </div>
-
-<div class="card" id="ocrPreviewCard" style="display:none">
 
 <h3>📊 OCR Scan Preview</h3>
 
