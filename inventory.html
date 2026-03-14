@@ -130,7 +130,7 @@ button {
 button.secondary {
   background: var(--muted);
 }
-  
+
 .upload-actions{
   display:flex;
   gap:15px;
@@ -148,97 +148,49 @@ button.secondary {
 .camera-btn:hover{
   background:#1e4d59;
 }
-.upload-card{
-  padding:0;
-}
-
-.upload-box{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border:2px dashed var(--border);
-  border-radius:14px;
-  padding:22px 24px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.upload-box:hover{
-  background:rgba(255,255,255,0.4);
-}
-
-.upload-left{
-  display:flex;
-  gap:14px;
-  align-items:center;
-}
-
-.upload-icon{
-  font-size:24px;
-}
-
-.upload-right{
-  display:flex;
-  align-items:center;
-}
-
-.camera-icon{
-  background:var(--dark);
-  color:white;
-  border:none;
-  padding:10px 14px;
-  border-radius:10px;
-  font-size:16px;
-}
-
-.camera-icon:hover{
-  background:#1e4d59;
-}
 </style>
 </head>
-
-
 
 <body>
 
 <div class="container">
 
-  <div class="header">
-    <h1>🏪 Store Inventory Management</h1>
-    <div class="actions">
-      <button onclick="goToDashboard()">📊 Dashboard</button>
-      <button class="secondary" onclick="exitToHome()">🚪 Exit</button>
-    </div>
-  </div>
+<div class="header">
+<h1>🏪 Store Inventory Management</h1>
 
- <div class="card">
+<div class="actions">
+<button onclick="goToDashboard()">📊 Dashboard</button>
+<button class="secondary" onclick="exitToHome()">🚪 Exit</button>
+</div>
+</div>
 
-  <div class="upload-actions">
+<!-- Upload -->
+<div class="card">
 
-    <!-- Upload File -->
-    <div class="upload-box" id="uploadBox">
-      <strong>⬆ Upload Inventory File</strong>
-      <p>Upload CSV, Excel, or Image</p>
-    </div>
+<div class="upload-actions">
 
-    <!-- Camera Button -->
-    <button class="camera-btn" onclick="triggerCamera()">
-      📷 Scan Medicine List
-    </button>
+<div class="upload-box" id="uploadBox">
+<strong>⬆ Upload Inventory File</strong>
+<p>Upload CSV, Excel, or Image</p>
+</div>
 
-  </div>
-
-  <!-- Normal Upload -->
-  <input type="file" id="fileInput" accept=".csv,.xlsx,image/*">
-
-  <!-- Camera Capture -->
-  <input type="file"
-         id="cameraInput"
-         accept="image/*"
-         capture
-         style="display:none">
+<button class="camera-btn" id="cameraBtn">
+📷 Scan Medicine List
+</button>
 
 </div>
+
+<input type="file" id="fileInput" accept=".csv,.xlsx,image/*" style="display:none">
+
+<input
+type="file"
+id="cameraInput"
+accept="image/*"
+capture="environment"
+style="display:none">
+
+</div>
+
 <h3>📊 OCR Scan Preview</h3>
 
 <table>
@@ -251,50 +203,52 @@ button.secondary {
 </thead>
 
 <tbody id="ocrPreviewTable"></tbody>
-
 </table>
 
 <button onclick="saveInventory()">Save Inventory</button>
 
+<div class="kpis">
+<div class="kpi">
+<h2 id="totalItems">0</h2>
+<p>Total Items</p>
 </div>
-  
-  <!-- KPIs -->
-  <div class="kpis">
-    <div class="kpi">
-      <h2 id="totalItems">0</h2>
-      <p>Total Items</p>
-    </div>
-    <div class="kpi">
-      <h2 id="criticalCount">0</h2>
-      <p>Critical Risk</p>
-    </div>
-    <div class="kpi">
-      <h2 id="expiringSoon">0</h2>
-      <p>Expiring Soon</p>
-    </div>
-  </div>
 
-  <!-- Inventory Table -->
-  <div class="card">
-    <h3>📦 Uploaded Inventory</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Medicine</th>
-          <th>Quantity</th>
-          <th>Expiry (days)</th>
-          <th>Temperature</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="inventoryTable"></tbody>
-    </table>
-  </div>
+<div class="kpi">
+<h2 id="criticalCount">0</h2>
+<p>Critical Risk</p>
+</div>
+
+<div class="kpi">
+<h2 id="expiringSoon">0</h2>
+<p>Expiring Soon</p>
+</div>
+</div>
+
+<div class="card">
+<h3>📦 Uploaded Inventory</h3>
+
+<table>
+<thead>
+<tr>
+<th>Medicine</th>
+<th>Quantity</th>
+<th>Expiry (days)</th>
+<th>Temperature</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="inventoryTable"></tbody>
+</table>
 
 </div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="inventory.js"></script>
+
 </body>
 </html>
