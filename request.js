@@ -1,34 +1,65 @@
+let selectedInventoryItem = null;
+
 window.onload = function () {
   const params = new URLSearchParams(window.location.search);
+  const medicineName = params.get("medicine");
 
-  const medicine = params.get("medicine");
-  const from = params.get("from");
+  const inventories =
+    JSON.parse(localStorage.getItem("storeInventories")) || [];
 
-  if (medicine) {
-    document.getElementById("medicineName").value = medicine;
-  }
+  // Only approved medicines visible to user
+  selectedInventoryItem = inventories.find(
+    item =>
+      item.medicine === medicineName &&
+      item.approved === true &&
+      item.quantity > 0
+  );
 
-  if (from) {
-    document.getElementById("requester").value = from;
-  }
-};
-
-function submitRequest() {
-  let medicine = document.getElementById("medicineName").value;
-  let qty = document.getElementById("quantity").value;
-  let requester = document.getElementById("requester").value;
-
-  if (!medicine || !qty || !requester) {
-    alert("Please fill all fields");
+  if (!selectedInventoryItem) {
+    alert("Medicine not available or not approved.");
+    window.location.href = "index.html";
     return;
   }
 
-  alert(
-    `Request submitted!\n\nMedicine: ${medicine}\nQuantity: ${qty}\nRequester: ${requester}`
-  );
+  document.getElementById("medicineName").value =
+    selectedInventoryItem.medicine;
 
-  // Demo-only: no backend
-  document.getElementById("medicineName").value = "";
+  document.getElementById("availableQty").value =
+    selectedInventoryItem.quantity;
+};
+
+function submitRequest() {
+  const qty = parseInt(document.getElementById("quantity").value);
+  const requester = document.getElementById("requester").value;
+
+  if (!qty || !requester) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  if (qty > selectedInventoryItem.quantity) {
+    alert("Requested quantity exceeds available stock.");
+    return;
+  }
+
+  const requests =
+    JSON.parse(localStorage.getItem("medicineRequests")) || [];
+
+  const newRequest = {
+    id: Date.now(),
+    medicine: selectedInventoryItem.medicine,
+    quantity: qty,
+    requester: requester,
+    store: selectedInventoryItem.store,
+    status: "Pending",
+    requestedAt: new Date().toISOString()
+  };
+
+  requests.push(newRequest);
+  localStorage.setItem("medicineRequests", JSON.stringify(requests));
+
+  document.getElementById("successMsg").style.display = "block";
+
   document.getElementById("quantity").value = "";
   document.getElementById("requester").value = "";
 }
