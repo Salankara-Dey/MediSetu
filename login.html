@@ -636,25 +636,172 @@
           </div>
         </div>
 
-        <!-- ── SECTION 4: PROFESSIONAL DETAILS (register only, pharmacy/admin roles) ── -->
-        <div class="sec-card reg-only" id="proCard">
+        <!-- ── SECTION 4: ROLE-SPECIFIC DETAILS (register only) ── -->
+
+        <!-- ADMIN specific -->
+        <div class="sec-card reg-only" id="adminCard" style="display:none">
           <div class="sec-card-title">
-            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-            Professional / Facility Details
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Admin / Facility Details
           </div>
           <div class="fgrid cols2">
             <div class="field">
-              <label>License / Registration Number <span class="req">*</span></label>
-              <div class="input-wrap no-icon">
-                <input type="text" id="licenseNo" placeholder="MCI-2024-XXXXX or CDSCO-XXXXX"/>
-              </div>
-              <div class="err-msg" id="licErr">License number required for this role.</div>
+              <label>Full Name &amp; Designation <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="a-name" placeholder="Dr. Salankara Dey — Chief Pharmacist"/></div>
+              <div class="err-msg" id="aNameErr">Name and designation required.</div>
             </div>
             <div class="field">
-              <label>Institution / Hospital Name</label>
-              <div class="input-wrap no-icon">
-                <input type="text" id="institution" placeholder="Apollo Pharmacy / City Hospital"/>
+              <label>Facility / Hospital Name <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="a-facility" placeholder="AIIMS Bhubaneswar / City Hospital"/></div>
+              <div class="err-msg" id="aFacilityErr">Facility name required.</div>
+            </div>
+            <div class="field">
+              <label>GSTIN / Facility Registration No. <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="a-gstin" placeholder="29XXXXXXXX1Z5 or REG-XXXXX"/></div>
+              <div class="err-msg" id="aGstinErr">Registration number required.</div>
+            </div>
+            <div class="field">
+              <label>Official Phone <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="tel" id="a-phone" placeholder="+91 98765 43210"/></div>
+              <div class="err-msg" id="aPhoneErr">Official phone number required.</div>
+            </div>
+            <div class="field">
+              <label>Facility Address <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="a-addr" placeholder="Street, City"/></div>
+            </div>
+            <div class="field">
+              <label>PIN Code <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="a-pin" placeholder="751001" maxlength="6"/></div>
+              <div class="err-msg" id="aPinErr">Valid 6-digit PIN required.</div>
+            </div>
+            <div class="field">
+              <label>No. of Cold Storage Units</label>
+              <div class="input-wrap no-icon"><input type="number" id="a-units" placeholder="e.g. 4" min="0"/></div>
+              <div class="field-note">How many refrigeration units does your facility operate?</div>
+            </div>
+            <div class="field">
+              <label>Govt. ID Proof Upload <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="file" id="a-id" accept=".pdf,.jpg,.jpeg,.png" style="padding:9px 13px;cursor:pointer"/></div>
+              <div class="field-note">Aadhaar, PAN, or official government letter. PDF/JPG/PNG.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHARMACY specific -->
+        <div class="sec-card reg-only" id="pharmacyCard" style="display:none">
+          <div class="sec-card-title">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Pharmacy / Store Details
+          </div>
+          <div class="fgrid cols2">
+            <div class="field">
+              <label>Pharmacist Name <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-name" placeholder="B. Pharm / M. Pharm holder name"/></div>
+              <div class="err-msg" id="pNameErr">Pharmacist name required.</div>
+            </div>
+            <div class="field">
+              <label>Pharmacy License No. <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-license" placeholder="State PCI License / DL No."/></div>
+              <div class="err-msg" id="pLicErr">Drug License number required.</div>
+            </div>
+            <div class="field">
+              <label>Drug License Number (DL No.) <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-dl" placeholder="DL-20B-XXXXXXXX / RB/MH/12345"/></div>
+              <div class="err-msg" id="pDlErr">Drug License number required.</div>
+            </div>
+            <div class="field">
+              <label>Pharmacy / Store Name <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-store" placeholder="Apollo Pharmacy / MedPlus Bhubaneswar"/></div>
+              <div class="err-msg" id="pStoreErr">Store name required.</div>
+            </div>
+            <div class="field">
+              <label>GSTIN</label>
+              <div class="input-wrap no-icon"><input type="text" id="p-gstin" placeholder="22XXXXXXXX1Z5"/></div>
+            </div>
+            <div class="field">
+              <label>Owner WhatsApp / Phone <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="tel" id="p-phone" placeholder="+91 98765 43210"/></div>
+              <div class="err-msg" id="pPhoneErr">Phone number required.</div>
+            </div>
+            <div class="field">
+              <label>Store Address <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-addr" placeholder="Shop No., Street, City"/></div>
+            </div>
+            <div class="field">
+              <label>PIN Code <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="p-pin" placeholder="751001" maxlength="6"/></div>
+              <div class="err-msg" id="pPinErr">Valid 6-digit PIN required.</div>
+            </div>
+          </div>
+          <div class="fgrid" style="margin-top:.9rem">
+            <div class="field">
+              <label>Cold Storage Available?</label>
+              <div style="display:flex;gap:1rem;margin-top:.4rem">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.88rem;color:var(--slate)">
+                  <input type="radio" name="p-cold" value="yes" style="accent-color:var(--teal)"/> Yes — we have refrigeration
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.88rem;color:var(--slate)">
+                  <input type="radio" name="p-cold" value="no" checked style="accent-color:var(--teal)"/> No cold storage
+                </label>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USER specific -->
+        <div class="sec-card reg-only" id="userCard" style="display:none">
+          <div class="sec-card-title">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+            Patient / User Health Details
+          </div>
+          <div class="fgrid cols2">
+            <div class="field">
+              <label>Full Name <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="u-name" placeholder="Your full name"/></div>
+              <div class="err-msg" id="uNameErr">Full name required.</div>
+            </div>
+            <div class="field">
+              <label>Age</label>
+              <div class="input-wrap no-icon"><input type="number" id="u-age" placeholder="e.g. 35" min="1" max="120"/></div>
+            </div>
+            <div class="field">
+              <label>Aadhaar Number <span style="color:var(--muted);font-weight:400;font-size:.72rem">(last 4 digits stored only)</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="u-aadhaar" placeholder="XXXX XXXX XXXX" maxlength="14" oninput="maskAadhaar(this)"/></div>
+              <div class="field-note">We only store the last 4 digits for identity verification.</div>
+            </div>
+            <div class="field">
+              <label>Health ID / ABHA Number <span style="color:var(--muted);font-weight:400;font-size:.72rem">(optional)</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="u-abha" placeholder="XX-XXXX-XXXX-XXXX"/></div>
+            </div>
+            <div class="field">
+              <label>Chronic Illness / Medical Condition <span class="req">*</span></label>
+              <div class="input-wrap no-icon">
+                <select id="u-condition">
+                  <option value="">— Select primary condition —</option>
+                  <option>Type 1 Diabetes</option><option>Type 2 Diabetes</option>
+                  <option>Hypertension</option><option>Heart Disease</option>
+                  <option>Asthma / COPD</option><option>Cancer</option>
+                  <option>Kidney Disease</option><option>HIV/AIDS</option>
+                  <option>Tuberculosis</option><option>Thyroid Disorder</option>
+                  <option>Neurological Condition</option><option>Other Chronic Illness</option>
+                  <option>No chronic condition — caregiver</option>
+                </select>
+              </div>
+              <div class="err-msg" id="uCondErr">Please select your condition.</div>
+            </div>
+            <div class="field">
+              <label>Prescribed Doctor Name</label>
+              <div class="input-wrap no-icon"><input type="text" id="u-doctor" placeholder="Dr. Anita Rao, AIIMS Bhubaneswar"/></div>
+            </div>
+            <div class="field">
+              <label>Emergency Contact Name <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="text" id="u-emer-name" placeholder="Parent / Spouse / Guardian name"/></div>
+              <div class="err-msg" id="uEmerErr">Emergency contact required.</div>
+            </div>
+            <div class="field">
+              <label>Emergency Contact Phone <span class="req">*</span></label>
+              <div class="input-wrap no-icon"><input type="tel" id="u-emer-phone" placeholder="+91 98765 43210"/></div>
+              <div class="err-msg" id="uEmerPhErr">Emergency phone required.</div>
             </div>
           </div>
         </div>
@@ -850,12 +997,14 @@
     document.getElementById('forgotLink').style.display = isReg ? 'none' : '';
     document.getElementById('strengthWrap').classList.toggle('show', isReg);
 
-    // purpose section only for user role
-    const purposeCard = document.getElementById('purposeCard');
-    if (purposeCard) purposeCard.style.display = (isReg && role === 'user') ? 'block' : 'none';
-    // pro section only for pharmacy/admin
-    const proCard = document.getElementById('proCard');
-    if (proCard) proCard.style.display = (isReg && (role === 'pharmacy' || role === 'admin')) ? 'block' : 'none';
+    // show role-specific cards
+    if (isReg) showRoleCards(role);
+    else {
+      ['adminCard','pharmacyCard','userCard'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+    }
 
     clearErrors();
   }
@@ -865,15 +1014,26 @@
     role = r;
     document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    // show professional section for pharmacy/admin on register only
-    const pro = document.getElementById('proCard');
-    if (pro) pro.style.display = (tab === 'register' && (r === 'pharmacy' || r === 'admin')) ? 'block' : 'none';
-    // show purpose/location section only for user role on register
+    if (tab === 'register') showRoleCards(r);
+  }
+
+  function showRoleCards(r) {
+    // hide all role-specific cards first
+    ['adminCard','pharmacyCard','userCard'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+    // show the right one
+    const cardMap = {admin:'adminCard', pharmacy:'pharmacyCard', user:'userCard'};
+    const target = document.getElementById(cardMap[r]);
+    if (target) target.style.display = 'block';
+    // purpose section only for user
     const purposeCard = document.getElementById('purposeCard');
+    if (purposeCard) purposeCard.style.display = r === 'user' ? 'block' : 'none';
+    // location always shown on register
     const locCard = document.getElementById('locCard');
-    if (tab === 'register') {
-      if (purposeCard) purposeCard.style.display = r === 'user' ? 'block' : 'none';
-      if (locCard) locCard.style.display = 'block'; // location always shown on register
+    if (locCard && locCard.classList.contains('reg-only')) {
+      locCard.classList.add('show');
     }
   }
 
@@ -1023,6 +1183,10 @@
     }
 
     if (!ok) { showToast('Please fix the errors above.','err'); return; }
+    // role-specific field validation
+    if (tab === 'register' && !validateRoleFields()) {
+      showToast('Please complete your role-specific details.','err'); return;
+    }
 
     const btn = document.getElementById('submitBtn');
     btn.classList.add('loading');
@@ -1150,6 +1314,65 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
   });
+
+  /* ── AADHAAR MASK ── */
+  function maskAadhaar(inp) {
+    let v = inp.value.replace(/\D/g,'').slice(0,12);
+    inp.value = v.replace(/(\d{4})(\d{0,4})(\d{0,4})/,'$1 $2 $3').trim();
+  }
+
+  /* ── ROLE-SPECIFIC VALIDATION ── */
+  function validateRoleFields() {
+    let ok = true;
+    const clrErr = (id, errId) => {
+      const el=document.getElementById(id); const em=document.getElementById(errId);
+      if(el) el.classList.remove('err'); if(em) em.classList.remove('show');
+    };
+    const markErr = (id, errId) => {
+      const el=document.getElementById(id); const em=document.getElementById(errId);
+      if(el) el.classList.add('err'); if(em) em.classList.add('show');
+      ok = false;
+    };
+
+    if (role === 'admin') {
+      ['a-name','a-facility','a-gstin','a-phone','a-pin'].forEach(f=>{
+        const errId = {
+          'a-name':'aNameErr','a-facility':'aFacilityErr',
+          'a-gstin':'aGstinErr','a-phone':'aPhoneErr','a-pin':'aPinErr'
+        }[f];
+        clrErr(f, errId);
+        const el = document.getElementById(f);
+        if(el && !el.value.trim()) markErr(f, errId);
+      });
+      const pin = document.getElementById('a-pin');
+      if(pin && pin.value && !/^\d{6}$/.test(pin.value.trim())) markErr('a-pin','aPinErr');
+
+    } else if (role === 'pharmacy') {
+      ['p-name','p-license','p-dl','p-store','p-phone','p-pin'].forEach(f=>{
+        const errId = {
+          'p-name':'pNameErr','p-license':'pLicErr','p-dl':'pDlErr',
+          'p-store':'pStoreErr','p-phone':'pPhoneErr','p-pin':'pPinErr'
+        }[f];
+        clrErr(f, errId);
+        const el = document.getElementById(f);
+        if(el && !el.value.trim()) markErr(f, errId);
+      });
+      const pin = document.getElementById('p-pin');
+      if(pin && pin.value && !/^\d{6}$/.test(pin.value.trim())) markErr('p-pin','pPinErr');
+
+    } else if (role === 'user') {
+      ['u-name','u-condition','u-emer-name','u-emer-phone'].forEach(f=>{
+        const errId = {
+          'u-name':'uNameErr','u-condition':'uCondErr',
+          'u-emer-name':'uEmerErr','u-emer-phone':'uEmerPhErr'
+        }[f];
+        clrErr(f, errId);
+        const el = document.getElementById(f);
+        if(el && !el.value.trim()) markErr(f, errId);
+      });
+    }
+    return ok;
+  }
 </script>
 </body>
 </html>
