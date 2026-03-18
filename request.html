@@ -296,13 +296,13 @@
       <div class="notif-dot"></div>
     </button>
     <div class="top-user">
-      <div class="top-av">PS</div>
+      <div class="top-av" data-user-initials>PS</div>
       <div>
-        <div class="top-uname">Priya Sharma</div>
-        <div class="top-urole">User · Bhubaneswar</div>
+        <div class="top-uname" data-user-name>Priya Sharma</div>
+        <div class="top-urole" data-user-role>User · Bhubaneswar</div>
       </div>
     </div>
-    <a href="login.html" class="top-btn outline">
+    <a href="#" onclick="medisetuLogout();return false;" class="top-btn outline">
       <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Logout
     </a>
@@ -371,7 +371,7 @@
       </div>
       <div>
         <h4>Request Submitted Successfully!</h4>
-        <p>Your request has been received and is under review. You'll be notified once it's approved. Track it in <a href="#" onclick="switchTabByName('myreqs');return false;" style="color:var(--teal);font-weight:700">My Requests</a>.</p>
+        <p>Your request has been received and is under review. You'll be notified once it's approved. Track it in <a href="#" onclick="switchTabByName('myreqs');return false;" style="color:var(--teal);font-weight:700"><span data-i18n="req.mine">My Requests</span></a>.</p>
       </div>
     </div>
 
@@ -525,10 +525,10 @@
         <div class="submit-area">
           <button type="submit" class="btn-submit" id="submitBtn">
             <div class="spinner"></div>
-            <span class="btn-lbl">Submit Request</span>
+            <span class="btn-lbl"><span data-i18n="req.submit">Submit Request</span></span>
             <svg class="btn-lbl" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
-          <button type="button" class="btn-draft" onclick="saveDraft()">Save as Draft</button>
+          <button type="button" class="btn-draft" onclick="saveDraft()"><span data-i18n="req.draft">Save as Draft</span></button>
           <p class="save-note">Your request is verified against your registered location and identity to prevent misuse.</p>
         </div>
 
@@ -635,7 +635,7 @@
   <div class="tab-pane" id="tab-nearby">
     <div class="sec-hdr">
       <div class="sec-hdr-l">
-        <h2>Nearby Availability</h2>
+        <h2><span data-i18n="req.nearby">Nearby Availability</span></h2>
         <p>Facilities near Bhubaneswar with available stock right now.</p>
       </div>
       <button class="top-btn outline" onclick="showToast('Location refreshed','ok')">
@@ -920,5 +920,7 @@
   // init
   renderMeds();
 </script>
+<script src="i18n.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
