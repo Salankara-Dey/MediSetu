@@ -399,8 +399,8 @@
 
       <!-- Tab switcher -->
       <div class="auth-tabs">
-        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
-        <button class="auth-tab" id="tabReg" onclick="switchTab('register')">Create Account</button>
+        <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')"><span data-i18n="login.signin">Sign In</span></button>
+        <button class="auth-tab" id="tabReg" onclick="switchTab('register')"><span data-i18n="login.register">Create Account</span></button>
       </div>
 
       <h1 class="form-title" id="fTitle">Welcome back</h1>
@@ -787,7 +787,7 @@
           <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="10" font-family="Arial" font-weight="bold">आधार</text>
         </svg>
       </div>
-      <h3>Aadhaar OTP Login</h3>
+      <h3><span data-i18n="login.aadhaar">Aadhaar OTP Login</span></h3>
       <p>Enter your 12-digit Aadhaar number. An OTP will be sent to your Aadhaar-linked mobile number via UIDAI.</p>
       <div class="otp-input-wrap">
         <input type="text" id="aadhaarNum" placeholder="XXXX XXXX XXXX" maxlength="14"
@@ -1028,13 +1028,19 @@
     btn.classList.add('loading');
     setTimeout(() => {
       btn.classList.remove('loading');
+      const name = document.getElementById('fullname') ? (document.getElementById('fullname').value || email.split('@')[0]) : email.split('@')[0];
       const msg = tab === 'register' ? `Account created! Verifying your details…` : `Signed in as ${role}`;
       showToast(msg,'ok');
-      setTimeout(() => {
-        if (role === 'admin') window.location.href = 'admin-dashboard.html';
-        else if (role === 'pharmacy') window.location.href = 'inventory.html';
-        else window.location.href = 'request.html';
-      }, 1400);
+      // save session via nav.js then redirect
+      if (typeof medisetuLogin === 'function') {
+        setTimeout(() => medisetuLogin(role, name, email), 1400);
+      } else {
+        setTimeout(() => {
+          if (role === 'admin') window.location.href = 'admin-dashboard.html';
+          else if (role === 'pharmacy') window.location.href = 'inventory.html';
+          else window.location.href = 'request.html';
+        }, 1400);
+      }
     }, 2000);
   }
 
@@ -1120,11 +1126,17 @@
     showToast('Identity verified! Signing in…','ok');
     const modalId = type === 'mobile' ? 'mobileModal' : 'aadhaarModal';
     closeModal(modalId);
-    setTimeout(() => {
-      if (role === 'admin') window.location.href = 'admin-dashboard.html';
-      else if (role === 'pharmacy') window.location.href = 'inventory.html';
-      else window.location.href = 'request.html';
-    }, 1400);
+    const email = document.getElementById('email').value || 'user@medisetu.com';
+    const name  = email.split('@')[0];
+    if (typeof medisetuLogin === 'function') {
+      setTimeout(() => medisetuLogin(role, name, email), 1400);
+    } else {
+      setTimeout(() => {
+        if (role === 'admin') window.location.href = 'admin-dashboard.html';
+        else if (role === 'pharmacy') window.location.href = 'inventory.html';
+        else window.location.href = 'request.html';
+      }, 1400);
+    }
   }
 
   // Close modal on overlay click
