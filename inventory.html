@@ -247,17 +247,17 @@
   </a>
 
   <div class="sb-lbl" style="margin-top:10px">Account</div>
-  <a href="login.html" class="nav-item" style="color:rgba(255,100,100,.65)">
+  <a href="#" onclick="medisetuLogout();return false;" class="nav-item" style="color:rgba(255,100,100,.65)">
     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
     Logout
   </a>
 
   <div class="sb-bottom">
     <div class="sb-user">
-      <div class="sb-av" id="sbAv">AP</div>
+      <div class="sb-av" id="sbAv" data-user-initials>AP</div>
       <div>
-        <div class="sb-uname" id="sbName">Apollo Pharmacy</div>
-        <div class="sb-urole" id="sbRole">Pharmacy Staff</div>
+        <div class="sb-uname" id="sbName" data-user-name>Apollo Pharmacy</div>
+        <div class="sb-urole" id="sbRole" data-user-role>Pharmacy Staff</div>
       </div>
     </div>
   </div>
@@ -266,7 +266,7 @@
 <!-- ══ MAIN ══ -->
 <div class="main">
   <div class="topbar">
-    <h1 class="topbar-title">Medicine Inventory</h1>
+    <h1 class="topbar-title"><span data-i18n="inv.title">Medicine Inventory</span></h1>
     <div class="topbar-right">
       <div class="tb-search">
         <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -907,5 +907,7 @@
   // init
   renderTable();
 </script>
+<script src="i18n.js"></script>
+<script src="nav.js"></script>
 </body>
 </html>
