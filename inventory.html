@@ -215,6 +215,32 @@
 
     @media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}.sidebar{display:none}}
     @media(max-width:600px){.kpi-row{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column;align-items:flex-start}.toolbar-right{width:100%;flex-wrap:wrap}}
+
+    /* ── ML SCAN MODAL ── */
+    .scan-drop{border:2.5px dashed var(--teal);border-radius:16px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .25s;background:#f0fdfa;position:relative}
+    .scan-drop:hover,.scan-drop.drag{background:#d1fae5;border-color:var(--teal-dark)}
+    .scan-drop input{display:none}
+    .scan-preview{width:100%;max-height:200px;object-fit:contain;border-radius:10px;margin:12px 0;display:none;border:1px solid var(--border)}
+    .scan-preview.show{display:block}
+    .scan-state{display:none;flex-direction:column;align-items:center;gap:10px;padding:16px 0}
+    .scan-state.show{display:flex}
+    .scan-spinner{width:42px;height:42px;border:4px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .scan-result{background:var(--offwhite);border:1px solid var(--border);border-radius:12px;padding:0;overflow:hidden;margin-top:12px;display:none}
+    .scan-result.show{display:block}
+    .scan-result-hdr{background:linear-gradient(135deg,var(--teal-dark),var(--teal));color:#fff;padding:10px 16px;font-family:'Sora',sans-serif;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px}
+    .scan-fields{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .scan-field{padding:10px 14px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+    .scan-field:nth-child(even){border-right:none}
+    .scan-field-lbl{font-size:.65rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+    .scan-field-val{font-size:.85rem;font-weight:700;color:var(--navy)}
+    .scan-field-val.editable{background:#fff;border:1.5px solid var(--border);border-radius:7px;padding:5px 8px;width:100%;font-family:'DM Sans',sans-serif;outline:none}
+    .scan-field-val.editable:focus{border-color:var(--teal);box-shadow:0 0 0 2px rgba(13,148,136,.1)}
+    .conf-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:50px;font-size:.62rem;font-weight:800}
+    .conf-high{background:#dcfce7;color:#16a34a}
+    .conf-med{background:#fffbeb;color:#b45309}
+    .conf-low{background:#fef2f2;color:#dc2626}
+    .scan-note{font-size:.72rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--border);line-height:1.5}
   </style>
 </head>
 <body>
@@ -352,6 +378,10 @@
         </button>
       </div>
       <div class="toolbar-right">
+        <button class="btn outline" onclick="openModal('scanModal')" style="background:linear-gradient(135deg,#f0fdfa,#eff6ff);border-color:var(--teal);color:var(--teal-dark);font-weight:700">
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          📷 Scan Label (AI)
+        </button>
         <button class="btn outline" onclick="toggleUpload()">
           <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Upload CSV/Excel
@@ -907,7 +937,307 @@
   // init
   renderTable();
 </script>
+
+<!-- ══ ML PHOTO SCAN MODAL ══ -->
+<div class="modal-overlay" id="scanModal">
+  <div class="modal" style="max-width:580px">
+    <button class="modal-close" onclick="closeModal('scanModal');resetScan()"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:.4rem">
+      <div style="width:42px;height:42px;border-radius:12px;background:#f0fdfa;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0d9488" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <div>
+        <h3 style="margin-bottom:2px">AI Medicine Label Scanner</h3>
+        <p style="font-size:.8rem;color:var(--muted);margin:0">Photo your medicine strip, box, or handwritten stock sheet</p>
+      </div>
+    </div>
+
+    <!-- Info banner -->
+    <div style="background:#eff6ff;border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:10px 14px;display:flex;gap:10px;margin-bottom:1.2rem;align-items:flex-start">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#3b82f6" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p style="font-size:.76rem;color:#1d4ed8;line-height:1.55;margin:0">
+        The AI will read: <strong>medicine name, batch number, expiry date, quantity, manufacturer, storage type and MRP</strong> from your photo. Results are editable before saving.
+      </p>
+    </div>
+
+    <!-- Drop zone -->
+    <div class="scan-drop" id="scanDrop"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleScanDrop(event)"
+      onclick="document.getElementById('scanFileInput').click()">
+      <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="#0d9488" stroke-width="1.5" style="margin-bottom:10px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      <div style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy);margin-bottom:5px">Take or upload a photo</div>
+      <div style="font-size:.78rem;color:var(--muted)">JPG, PNG, WEBP · Drag & drop or click · Max 10MB</div>
+      <input type="file" id="scanFileInput" accept="image/*" capture="environment" onchange="handleScanFile(event)"/>
+    </div>
+    <img id="scanPreview" class="scan-preview" alt="Preview"/>
+
+    <!-- Scanning state -->
+    <div class="scan-state" id="scanState">
+      <div class="scan-spinner"></div>
+      <div style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy)">AI is reading your label…</div>
+      <div id="scanStatusTxt" style="font-size:.78rem;color:var(--muted)">Detecting text and medicine details</div>
+    </div>
+
+    <!-- Results -->
+    <div class="scan-result" id="scanResult">
+      <div class="scan-result-hdr">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        Label scanned — review &amp; edit before saving
+        <span id="scanConfBadge" class="conf-badge conf-high" style="margin-left:auto">High confidence</span>
+      </div>
+      <div class="scan-fields">
+        <div class="scan-field">
+          <div class="scan-field-lbl">Medicine Name</div>
+          <input class="scan-field-val editable" id="sf-name" type="text"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Manufacturer</div>
+          <input class="scan-field-val editable" id="sf-mfr" type="text"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Batch / Lot No.</div>
+          <input class="scan-field-val editable" id="sf-batch" type="text"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Expiry Date</div>
+          <input class="scan-field-val editable" id="sf-expiry" type="date"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Quantity / Units</div>
+          <input class="scan-field-val editable" id="sf-qty" type="number" min="1"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">MRP (₹)</div>
+          <input class="scan-field-val editable" id="sf-mrp" type="text"/>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Storage Type</div>
+          <select class="scan-field-val editable" id="sf-storage">
+            <option>Cold Chain (2–8°C)</option>
+            <option>Ultra-Cold (−20°C)</option>
+            <option>Room Temperature</option>
+            <option>Controlled (15–25°C)</option>
+          </select>
+        </div>
+        <div class="scan-field">
+          <div class="scan-field-lbl">Category</div>
+          <select class="scan-field-val editable" id="sf-cat">
+            <option>Biologic</option><option>Vaccine</option><option>OTC</option>
+            <option>Antibiotic</option><option>Cardiac</option><option>Diabetes</option><option>Pain Relief</option>
+          </select>
+        </div>
+      </div>
+      <div class="scan-note" id="scanNote">✓ All fields extracted. Please verify the expiry date and quantity before adding to inventory.</div>
+    </div>
+
+    <div class="modal-btns" style="margin-top:1rem">
+      <button class="mbtn-cancel" onclick="resetScan()">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:-1px;margin-right:4px"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.57-9.67"/></svg>
+        Scan Again
+      </button>
+      <button class="mbtn-ok" id="scanSaveBtn" onclick="saveScanResult()" style="display:none">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:-2px;margin-right:6px"><path d="M20 6 9 17l-5-5"/></svg>
+        Add to Inventory
+      </button>
+    </div>
+  </div>
+</div>
+
 <script src="i18n.js"></script>
-<script src="nav.js"></script>
+<script src="nav.js">
+  /* ══ ML PHOTO SCAN ══ */
+  let scanB64 = null;
+
+  function handleScanDrop(e) {
+    e.preventDefault();
+    document.getElementById('scanDrop').classList.remove('drag');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) startScan(file);
+    else showToast('Please drop an image file (JPG/PNG)','err');
+  }
+
+  function handleScanFile(e) {
+    const file = e.target.files[0];
+    if (file) startScan(file);
+  }
+
+  function startScan(file) {
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const prev = document.getElementById('scanPreview');
+      prev.src = ev.target.result;
+      prev.classList.add('show');
+      // Extract base64 (strip data URL prefix)
+      scanB64 = ev.target.result.split(',')[1];
+      // Show scanning state
+      document.getElementById('scanState').classList.add('show');
+      document.getElementById('scanResult').classList.remove('show');
+      document.getElementById('scanSaveBtn').style.display = 'none';
+      // Run AI
+      runScanAI(scanB64);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function runScanAI(b64) {
+    const statuses = [
+      'Detecting text on label…',
+      'Identifying medicine name…',
+      'Extracting batch and expiry…',
+      'Parsing manufacturer details…',
+      'Finalising results…'
+    ];
+    let si = 0;
+    const statusEl = document.getElementById('scanStatusTxt');
+    const statusInterval = setInterval(() => {
+      statusEl.textContent = statuses[Math.min(si++, statuses.length-1)];
+    }, 900);
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{
+            role: 'user',
+            content: [
+              {
+                type: 'image',
+                source: { type: 'base64', media_type: 'image/jpeg', data: b64 }
+              },
+              {
+                type: 'text',
+                text: `You are a medical label OCR system. Analyse this image of a medicine label, box, strip, or handwritten stock sheet.
+
+Extract and return ONLY a JSON object with these exact fields (no markdown, no explanation, just JSON):
+{
+  "name": "full medicine name including strength e.g. Paracetamol 500mg",
+  "manufacturer": "manufacturer or company name",
+  "batch": "batch or lot number",
+  "expiry": "expiry date in YYYY-MM-DD format, convert from any format like MAR 2026 → 2026-03-01",
+  "quantity": "numeric quantity if visible, else 1",
+  "mrp": "MRP price if visible, else empty string",
+  "storage": "one of: Cold Chain (2–8°C) | Ultra-Cold (−20°C) | Room Temperature | Controlled (15–25°C)",
+  "category": "one of: Biologic | Vaccine | OTC | Antibiotic | Cardiac | Diabetes | Pain Relief",
+  "confidence": "high | medium | low — based on image clarity",
+  "notes": "any important warning, dosage or handling note visible on label, max 1 sentence"
+}
+
+If a field is not visible, use an empty string. Always return valid JSON only.`
+              }
+            ]
+          }]
+        })
+      });
+
+      clearInterval(statusInterval);
+      const data = await res.json();
+      const raw = data?.content?.[0]?.text || '{}';
+
+      let parsed;
+      try {
+        // strip any accidental markdown fences
+        const clean = raw.replace(/```json|```/g,'').trim();
+        parsed = JSON.parse(clean);
+      } catch {
+        throw new Error('Could not parse AI response');
+      }
+
+      fillScanResults(parsed);
+
+    } catch (err) {
+      clearInterval(statusInterval);
+      console.error('Scan error:', err);
+      // fallback: show empty editable form
+      fillScanResults({
+        name:'', manufacturer:'', batch:'', expiry:'',
+        quantity:'1', mrp:'', storage:'Room Temperature',
+        category:'OTC', confidence:'low',
+        notes:'AI could not read this image clearly. Please fill in the fields manually.'
+      });
+    }
+  }
+
+  function fillScanResults(d) {
+    document.getElementById('scanState').classList.remove('show');
+
+    // Fill editable fields
+    document.getElementById('sf-name').value    = d.name    || '';
+    document.getElementById('sf-mfr').value     = d.manufacturer || '';
+    document.getElementById('sf-batch').value   = d.batch   || '';
+    document.getElementById('sf-expiry').value  = d.expiry  || '';
+    document.getElementById('sf-qty').value     = d.quantity|| '1';
+    document.getElementById('sf-mrp').value     = d.mrp     || '';
+
+    // Match selects
+    const storSel = document.getElementById('sf-storage');
+    for (let opt of storSel.options) {
+      if (opt.value === d.storage) { storSel.value = d.storage; break; }
+    }
+    const catSel = document.getElementById('sf-cat');
+    for (let opt of catSel.options) {
+      if (opt.value === d.category) { catSel.value = d.category; break; }
+    }
+
+    // Confidence badge
+    const badge = document.getElementById('scanConfBadge');
+    const conf = (d.confidence || 'medium').toLowerCase();
+    badge.className = 'conf-badge conf-' + (conf === 'high' ? 'high' : conf === 'medium' ? 'med' : 'low');
+    badge.textContent = conf.charAt(0).toUpperCase() + conf.slice(1) + ' confidence';
+
+    // Note
+    document.getElementById('scanNote').textContent = d.notes
+      ? '📌 ' + d.notes
+      : '✓ Review all fields before adding to inventory.';
+
+    document.getElementById('scanResult').classList.add('show');
+    document.getElementById('scanSaveBtn').style.display = '';
+  }
+
+  function saveScanResult() {
+    const name    = document.getElementById('sf-name').value.trim();
+    const expiry  = document.getElementById('sf-expiry').value;
+    const qty     = parseInt(document.getElementById('sf-qty').value) || 1;
+    if (!name) { showToast('Medicine name is required','err'); document.getElementById('sf-name').focus(); return; }
+    if (!expiry) { showToast('Expiry date is required','err'); document.getElementById('sf-expiry').focus(); return; }
+
+    medicines.unshift({
+      id: nextId++,
+      name,
+      cat:      document.getElementById('sf-cat').value,
+      units:    qty,
+      expiry,
+      storage:  document.getElementById('sf-storage').value,
+      facility: (typeof medisetuSession === 'function' && medisetuSession()?.name) || 'Scanned — My Facility',
+      batch:    document.getElementById('sf-batch').value || 'SCAN-' + Date.now(),
+      temp:     'ok',
+      notes:    '📷 Added via AI label scan. MRP: ' + (document.getElementById('sf-mrp').value || 'N/A') +
+                ' | Mfr: ' + (document.getElementById('sf-mfr').value || 'N/A')
+    });
+
+    closeModal('scanModal');
+    resetScan();
+    renderTable();
+    showToast(`"${name}" added via AI scan ✓`, 'ok');
+  }
+
+  function resetScan() {
+    document.getElementById('scanPreview').classList.remove('show');
+    document.getElementById('scanPreview').src = '';
+    document.getElementById('scanState').classList.remove('show');
+    document.getElementById('scanResult').classList.remove('show');
+    document.getElementById('scanSaveBtn').style.display = 'none';
+    document.getElementById('scanFileInput').value = '';
+    document.getElementById('scanDrop').classList.remove('drag');
+    scanB64 = null;
+  }
+
+</script>
 </body>
 </html>
